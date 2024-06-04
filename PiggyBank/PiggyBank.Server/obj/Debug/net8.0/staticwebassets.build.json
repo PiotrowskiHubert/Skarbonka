@@ -1,0 +1,62 @@
+{
+  "Version": 1,
+  "Hash": "hpC+q1bmuc0XSvg4X6uH/w16/d9THgUp9pQNviTInXE=",
+  "Source": "PiggyBank.Server",
+  "BasePath": "_content/PiggyBank.Server",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [
+    {
+      "Identity": "C:\\Users\\adamc\\Documents\\GitHub\\Skarbonka\\PiggyBank\\piggybank.client\\piggybank.client.esproj",
+      "Version": 2,
+      "Source": "piggybank.client",
+      "GetPublishAssetsTargets": "GetCurrentProjectPublishStaticWebAssetItems",
+      "AdditionalPublishProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalPublishPropertiesToRemove": "WebPublishProfileFile;TargetFramework;RuntimeIdentifier;SelfContained",
+      "GetBuildAssetsTargets": "GetCurrentProjectBuildStaticWebAssetItems",
+      "AdditionalBuildProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalBuildPropertiesToRemove": "WebPublishProfileFile;TargetFramework;RuntimeIdentifier;SelfContained"
+    }
+  ],
+  "DiscoveryPatterns": [],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\adamc\\Documents\\GitHub\\Skarbonka\\PiggyBank\\PiggyBank.Server\\obj\\Debug\\net8.0\\scopedcss\\bundle\\PiggyBank.Server.styles.css",
+      "SourceId": "PiggyBank.Server",
+      "SourceType": "Computed",
+      "ContentRoot": "C:\\Users\\adamc\\Documents\\GitHub\\Skarbonka\\PiggyBank\\PiggyBank.Server\\obj\\Debug\\net8.0\\scopedcss\\bundle\\",
+      "BasePath": "_content/PiggyBank.Server",
+      "RelativePath": "PiggyBank.Server.styles.css",
+      "AssetKind": "All",
+      "AssetMode": "CurrentProject",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "ScopedCss",
+      "AssetTraitValue": "ApplicationBundle",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "C:\\Users\\adamc\\Documents\\GitHub\\Skarbonka\\PiggyBank\\PiggyBank.Server\\obj\\Debug\\net8.0\\scopedcss\\bundle\\PiggyBank.Server.styles.css"
+    },
+    {
+      "Identity": "C:\\Users\\adamc\\Documents\\GitHub\\Skarbonka\\PiggyBank\\PiggyBank.Server\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\PiggyBank.Server.bundle.scp.css",
+      "SourceId": "PiggyBank.Server",
+      "SourceType": "Computed",
+      "ContentRoot": "C:\\Users\\adamc\\Documents\\GitHub\\Skarbonka\\PiggyBank\\PiggyBank.Server\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\",
+      "BasePath": "_content/PiggyBank.Server",
+      "RelativePath": "PiggyBank.Server.bundle.scp.css",
+      "AssetKind": "All",
+      "AssetMode": "Reference",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "ScopedCss",
+      "AssetTraitValue": "ProjectBundle",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "C:\\Users\\adamc\\Documents\\GitHub\\Skarbonka\\PiggyBank\\PiggyBank.Server\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\PiggyBank.Server.bundle.scp.css"
+    }
+  ]
+}

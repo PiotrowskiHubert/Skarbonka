@@ -1,0 +1,6 @@
+@PiggyBank.Server_HostAddress = http://localhost:5020
+
+GET {{PiggyBank.Server_HostAddress}}/home/
+Accept: application/json
+
+###

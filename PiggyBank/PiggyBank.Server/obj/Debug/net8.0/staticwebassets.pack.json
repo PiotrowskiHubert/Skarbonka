@@ -1,0 +1,25 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\adamc\\Documents\\GitHub\\Skarbonka\\PiggyBank\\PiggyBank.Server\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\PiggyBank.Server.bundle.scp.css",
+      "PackagePath": "staticwebassets\\PiggyBank.Server.bundle.scp.css"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.PiggyBank.Server.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.PiggyBank.Server.props",
+      "PackagePath": "build\\PiggyBank.Server.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.PiggyBank.Server.props",
+      "PackagePath": "buildMultiTargeting\\PiggyBank.Server.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.PiggyBank.Server.props",
+      "PackagePath": "buildTransitive\\PiggyBank.Server.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
