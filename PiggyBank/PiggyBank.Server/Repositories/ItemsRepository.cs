@@ -11,7 +11,7 @@ namespace PiggyBank.Repositories
     {
         public List<Item> GetItems()
         {
-            using (var dbContext = new ItemsDbContext())
+            using (var dbContext = new DbContext())
             {
                 return dbContext.Item.ToList();
             }

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PiggyBank.Server")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7725bbe6b0a19da6b0ef15709e39bf8d3d47ac83")]
 [assembly: System.Reflection.AssemblyProductAttribute("PiggyBank.Server")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PiggyBank.Server")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

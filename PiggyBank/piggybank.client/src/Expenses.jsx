@@ -9,7 +9,7 @@ export function Expenses() {
     }, []);
 
     async function populateItemsData() {
-        const response = await fetch('home');
+        const response = await fetch('items');
         const data = await response.json();
         console.log(data); // Log the response
         setItems(data);

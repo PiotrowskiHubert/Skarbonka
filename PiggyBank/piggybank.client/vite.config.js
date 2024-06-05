@@ -43,7 +43,11 @@ export default defineConfig({
     },
     server: {
         proxy: {
-            '^/home': {
+            '^/items': {
+                target,
+                secure: false
+            },
+            '^/rooms': {
                 target,
                 secure: false
             }

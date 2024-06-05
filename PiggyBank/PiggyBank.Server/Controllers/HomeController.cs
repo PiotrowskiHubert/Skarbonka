@@ -8,20 +8,11 @@ namespace PiggyBank.Server.Controllers
     [Route("[controller]")]
     public class HomeController : ControllerBase
     {
-        private readonly IItemsService _itemsService;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger, IItemsService itemsService)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            _itemsService = itemsService;
-        }
-
-        [HttpGet(Name = "GetHome")]
-        public IEnumerable<Item> Get()
-        {
-            IEnumerable<Item> items = _itemsService.GetItems();
-            return items;
         }
     }
 }
