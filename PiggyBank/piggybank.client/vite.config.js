@@ -50,6 +50,10 @@ export default defineConfig({
             '^/rooms': {
                 target,
                 secure: false
+            },
+            '^/users': {
+                target,
+                secure: false
             }
         },
         port: 5173,

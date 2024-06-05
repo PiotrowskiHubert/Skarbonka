@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import './Rooms.css';
 
-function showModal() {
+function showModal(roomName) {
     const modal = document.getElementById("modal");
+    modal.querySelector("info").innerText = "Successfully joined room: " + roomName;
     modal.showModal();
 }
 
@@ -41,7 +42,7 @@ export function Rooms() {
             });
 
             if (response.ok) {
-                showModal();
+                showModal(room.name);
             } else {
                 console.error('Failed to join room');
             }
@@ -78,7 +79,7 @@ export function Rooms() {
                         <span class="visually-hidden">Dismiss</span>
                         </button>
                     </div>
-                    <p>Successfully joined room</p>
+                    <p id="info"></p>
                 </dialog>
             </div>
         </div>

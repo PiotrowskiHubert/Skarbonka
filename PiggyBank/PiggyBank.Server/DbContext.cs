@@ -9,6 +9,7 @@ namespace PiggyBank
         public DbSet<Item> Item { get; set; }
         public DbSet<Room> Room { get; set; }
         public DbSet<Room_RoomUser> Room_RoomUser { get; set; }
+        public DbSet<Users> Users { get; set; }
 
         public void AddRoomUserToRoom(int roomId, int roomUserId)
         {

@@ -15,6 +15,8 @@ builder.Services.AddScoped<IItemsRepository, ItemsRepository>();
 builder.Services.AddScoped<IItemsService, ItemsService>();
 builder.Services.AddScoped<IRoomsRepository, RoomsRepository>();
 builder.Services.AddScoped<IRoomsService, RoomsService>();
+builder.Services.AddScoped<IUsersRepository, UsersRepository>();
+builder.Services.AddScoped<IUsersService, UsersService>();
 
 var app = builder.Build();
 
