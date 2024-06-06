@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import './Rooms.css';
 
-function showModal(roomName) {
+function showModal(roomName, status) {
     const modal = document.getElementById("modal");
-    modal.querySelector("#info").innerText = "Successfully joined room: " + roomName;
+    modal.querySelector("#info").innerText = "Successfully " + status + " room: " + roomName;
     modal.showModal();
 }
 
@@ -36,9 +36,9 @@ export function Rooms() {
     }
 
     async function joinRoom(room) {
-        const roomUserId = 1;
+        const roomUserId = JSON.parse(localStorage.getItem('user')).id;
         const roomUser = {
-            Id: 1,
+            Id: roomUserId,
             FirstName: "Marek",
             Surname: "Lesny"
         };
@@ -56,8 +56,8 @@ export function Rooms() {
                 });
 
                 if (response.ok) {
-                    window.location.reload();
-                    showModal(room.name);
+                    setUserRooms(prevUserRooms => prevUserRooms.filter(userRoom => userRoom.roomId !== room.id));
+                    showModal(room.name, "left");
                 } else {
                     console.error('Failed to leave room');
                 }
@@ -76,8 +76,8 @@ export function Rooms() {
                 });
 
                 if (response.ok) {
-                    window.location.reload();
-                    showModal(room.name);
+                    setUserRooms(prevUserRooms => [...prevUserRooms, { roomId: room.id }]);
+                    showModal(room.name, "joined");
                 } else {
                     console.error('Failed to join room');
                 }

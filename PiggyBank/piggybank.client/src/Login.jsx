@@ -11,18 +11,16 @@ export function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('users');
-            const users = await response.json();
-
-            const user = users.find(user => user.username === username && user.password === password);
-
-            if (user) {
+            const response = await fetch(`users/GetUser?username=${username}&password=${password}`);
+            if (response.ok) {
+                const user = await response.json();
                 localStorage.setItem('user', JSON.stringify(user));
                 document.getElementById("error").innerText = "";
                 navigate('/');
                 window.location.reload();
             } else {
                 document.getElementById("error").innerText = "Invalid username or password";
+                throw new Error('Invalid username or password');
             }
         } catch (error) {
             document.getElementById("error").innerText = error;

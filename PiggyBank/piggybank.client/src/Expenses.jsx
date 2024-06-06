@@ -1,39 +1,72 @@
 import { useEffect, useState } from 'react';
 import './Expenses.css';
+import { React, Fragment } from 'react';
 
 export function Expenses() {
     const [items, setItems] = useState([]); // Initialize with an empty array
+    const [userRooms, setUserRooms] = useState([]);
 
     useEffect(() => {
         populateItemsData();
+        populateUserExpensesData();
     }, []);
 
     async function populateItemsData() {
-        const response = await fetch('items');
+        const response = await fetch('items/GetItems');
         const data = await response.json();
-        console.log(data); // Log the response
         setItems(data);
     }
 
+    async function populateUserExpensesData() {
+        const userId = JSON.parse(localStorage.getItem('user')).id;
+        const response = await fetch(`items/GetRoomExpenses?userId=${userId}`);
+        const data = await response.json();
+        console.log(data);
+        var sortedData = [];
+        data.map(item => {
+            if (!sortedData[item.roomName]) {
+                sortedData[item.roomName] = [];
+            }
+            sortedData[item.roomName].push({
+                expenseName: item.expenseName,
+                purchaseDate: item.purchaseDate,
+                itemName: item.itemName,
+                itemPrice: item.itemPrice
+            });
+        });
+        setUserRooms(sortedData);
+        console.log(userRooms); // Log the response
+    }
+
+    useEffect(() => {
+        console.log(userRooms);
+    }, [userRooms]);
+
     return (
         <div>
-            <h1 id="tableLabel">Items</h1>
+            <h1 id="tableLabel">Expenses</h1>
             <table className="table table-striped" aria-labelledby="tableLabel">
                 <thead>
                     <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>Price</th>
+                        <th>Room name</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {items.map(item =>
-                        <tr key={item.id}>
-                            <td>{item.id}</td>
-                            <td>{item.name}</td>
-                            <td>{item.price}</td>
-                        </tr>
-                    )}
+                    {Object.keys(userRooms).map(roomName => (
+                        <div key={roomName}>
+                            <h2>{roomName}</h2>
+                            <ul>
+                                {userRooms[roomName].map((expense, index) => (
+                                    <div key={index}>
+                                        {index === 0 && <h3>{expense.expenseName}</h3>}
+                                        <div key={index}>
+                                            <p>{expense.itemName}: {expense.itemPrice}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </ul>
+                        </div>
+                    ))}
                 </tbody>
             </table>
         </div>

@@ -13,11 +13,18 @@ namespace PiggyBank.Server.Controllers
             _usersService = usersService;
         }
 
-        [HttpGet(Name = "GetUsers")]
-        public IEnumerable<Users> Get()
+        [HttpGet("GetUser", Name = "GetUser")]
+        public IActionResult Get([FromQuery] string username, [FromQuery] string password)
         {
-            IEnumerable<Users> users = _usersService.GetUsers();
-            return users;
+            Users user = _usersService.GetUser(username, password);
+            if(user != null)
+            {
+                return Ok(user);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }

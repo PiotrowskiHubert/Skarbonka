@@ -25,8 +25,7 @@ namespace PiggyBank.Server.Repositories
         {
             using (var dbContext = new DbContext())
             {
-                var rooms = dbContext.Room_RoomUser.FromSqlRaw("SELECT * FROM Room_RoomUser WHERE RoomUserId = {0}", userId).ToList();
-                return rooms;
+                return dbContext.Room_RoomUser.FromSqlRaw("SELECT * FROM Room_RoomUser WHERE RoomUserId = {0}", userId).ToList();
             }
         }
 
@@ -34,7 +33,6 @@ namespace PiggyBank.Server.Repositories
         {
             using (var dbContext = new DbContext())
             {
-                // Call the method to add the RoomUser to the Room
                 dbContext.AddRoomUserToRoom(roomRoomUser.RoomId, roomRoomUser.RoomUserId);
             }
         }
@@ -43,7 +41,6 @@ namespace PiggyBank.Server.Repositories
         {
             using (var dbContext = new DbContext())
             {
-                // Call the method to add the RoomUser to the Room
                 dbContext.RemoveRoomUserFromRoom(roomRoomUser.RoomId, roomRoomUser.RoomUserId);
             }
         }

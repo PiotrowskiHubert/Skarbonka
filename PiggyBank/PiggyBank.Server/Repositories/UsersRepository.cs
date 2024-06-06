@@ -4,15 +4,29 @@ namespace PiggyBank.Server.Repositories
 {
     internal interface IUsersRepository
     {
-        List<Users> GetUsers();
+        Users GetUser(string username, string password);
     }
     internal class UsersRepository : IUsersRepository
     {
-        public List<Users> GetUsers()
+        public Users GetUser(string username, string password)
         {
             using (var dbContext = new DbContext())
             {
-                return dbContext.Users.ToList();
+                var user = dbContext.Users.FirstOrDefault(u => u.Username == username);
+                if (user != null)
+                {
+                    if(user.Password == password) { 
+                        return user;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
     }

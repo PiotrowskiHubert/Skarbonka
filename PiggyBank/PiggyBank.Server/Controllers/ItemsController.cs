@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PiggyBank.Models;
-using PiggyBank.Repositories;
+using PiggyBank.Server.Dtos;
 using PiggyBank.Services;
 
 namespace PiggyBank.Controllers
@@ -15,10 +15,17 @@ namespace PiggyBank.Controllers
             _itemsService = itemsService;
         }
 
-        [HttpGet(Name = "GetItems")]
+        [HttpGet("GetItems", Name = "GetItems")]
         public IEnumerable<Item> Get()
         {
             IEnumerable<Item> items = _itemsService.GetItems();
+            return items;
+        }
+
+        [HttpGet("GetRoomExpenses", Name = "GetRoomExpenses")]
+        public IEnumerable<RoomExpenseDto> GetUserRooms([FromQuery] int userId)
+        {
+            IEnumerable<RoomExpenseDto> items = _itemsService.GetRoomExpenses(userId);
             return items;
         }
 
