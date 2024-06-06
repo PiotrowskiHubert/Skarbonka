@@ -1,4 +1,7 @@
+USE PiggyBank;
+
 INSERT INTO Users(Username, Password) VALUES('PajdaZeSmalcem', 'smalec123');
+INSERT INTO Users(Username, Password, RoomUserId) VALUES('mareklesny', 'hotdog123', 1);
 
 SELECT * FROM Users;
 

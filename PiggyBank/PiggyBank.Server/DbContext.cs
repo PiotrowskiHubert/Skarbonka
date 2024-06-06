@@ -24,6 +24,18 @@ namespace PiggyBank
             SaveChanges();
         }
 
+        public void RemoveRoomUserFromRoom(int roomId, int roomUserId)
+        {
+            var roomRoomUser = new Room_RoomUser
+            {
+                RoomId = roomId,
+                RoomUserId = roomUserId
+            };
+
+            Room_RoomUser.Remove(roomRoomUser);
+            SaveChanges();
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)

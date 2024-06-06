@@ -21,7 +21,14 @@ namespace PiggyBank.Server.Controllers
             return items;
         }
 
-        [HttpPost]
+        [HttpGet("GetUserRooms", Name = "GetUserRooms")]
+        public IEnumerable<Room_RoomUser> GetUserRooms([FromQuery] int userId)
+        {
+            IEnumerable<Room_RoomUser> items = _roomsService.GetUserRooms(userId);
+            return items;
+        }
+
+        [HttpPost("join", Name = "JoinRoom")]
         public IActionResult JoinRoom([FromBody] Room_RoomUser room_RoomUser)
         {
             if (room_RoomUser == null || room_RoomUser.RoomId <= 0 || room_RoomUser.RoomUserId <= 0)
@@ -30,6 +37,19 @@ namespace PiggyBank.Server.Controllers
             }
 
             _roomsService.JoinRoom(room_RoomUser);
+
+            return Ok(new { message = "Successfully joined room" });
+        }
+
+        [HttpPost("leave", Name = "LeaveRoom")]
+        public IActionResult LeaveRoom([FromBody] Room_RoomUser room_RoomUser)
+        {
+            if (room_RoomUser == null || room_RoomUser.RoomId <= 0 || room_RoomUser.RoomUserId <= 0)
+            {
+                return BadRequest("Invalid request");
+            }
+
+            _roomsService.LeaveRoom(room_RoomUser);
 
             return Ok(new { message = "Successfully joined room" });
         }

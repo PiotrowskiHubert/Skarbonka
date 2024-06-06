@@ -17,7 +17,6 @@ export function Login() {
             const user = users.find(user => user.username === username && user.password === password);
 
             if (user) {
-                localStorage.setItem('token', user.accessToken);
                 localStorage.setItem('user', JSON.stringify(user));
                 document.getElementById("error").innerText = "";
                 navigate('/');

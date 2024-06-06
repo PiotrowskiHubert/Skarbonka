@@ -3,7 +3,7 @@ import './Rooms.css';
 
 function showModal(roomName) {
     const modal = document.getElementById("modal");
-    modal.querySelector("info").innerText = "Successfully joined room: " + roomName;
+    modal.querySelector("#info").innerText = "Successfully joined room: " + roomName;
     modal.showModal();
 }
 
@@ -13,9 +13,11 @@ function closeModal() {
 }
 export function Rooms() {
     const [rooms, setRooms] = useState([]); // Initialize with an empty array
+    const [userRooms, setUserRooms] = useState([]);
 
     useEffect(() => {
         populateRoomsData();
+        populateUserRoomsData();
     }, []);
 
     async function populateRoomsData() {
@@ -25,6 +27,14 @@ export function Rooms() {
         setRooms(data);
     }
 
+    async function populateUserRoomsData() {
+        const userId = JSON.parse(localStorage.getItem('user')).id;
+        const response = await fetch(`rooms/GetUserRooms?userId=${userId}`);
+        const data = await response.json();
+        console.log(data); // Log the response
+        setUserRooms(data);
+    }
+
     async function joinRoom(room) {
         const roomUserId = 1;
         const roomUser = {
@@ -32,22 +42,48 @@ export function Rooms() {
             FirstName: "Marek",
             Surname: "Lesny"
         };
-        try {
-            const response = await fetch('rooms', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ RoomId: room.id, Room: room, RoomUserId: roomUserId, RoomUser: roomUser }),
-            });
 
-            if (response.ok) {
-                showModal(room.name);
-            } else {
-                console.error('Failed to join room');
+        const matchedRoom = userRooms.find(userRoom => userRoom.roomId === room.id);
+
+        if (matchedRoom) {
+            try {
+                const response = await fetch('rooms/leave', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ RoomId: room.id, Room: room, RoomUserId: roomUserId, RoomUser: roomUser }),
+                });
+
+                if (response.ok) {
+                    window.location.reload();
+                    showModal(room.name);
+                } else {
+                    console.error('Failed to leave room');
+                }
+            } catch (error) {
+                console.error('Error:', error);
             }
-        } catch (error) {
-            console.error('Error:', error);
+        }
+        else {
+            try {
+                const response = await fetch('rooms/join', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ RoomId: room.id, Room: room, RoomUserId: roomUserId, RoomUser: roomUser }),
+                });
+
+                if (response.ok) {
+                    window.location.reload();
+                    showModal(room.name);
+                } else {
+                    console.error('Failed to join room');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
         }
     }
 
@@ -66,7 +102,9 @@ export function Rooms() {
                         <tr key={room.id}>
                             <td>{room.id}</td>
                             <td>{room.name}</td>
-                            <button class="btn btn-outline-secondary" type="button" onClick={() => joinRoom(room)}>Join</button>
+                            <button class="btn btn-outline-secondary" type="button" onClick={() => joinRoom(room)}>
+                                {userRooms.some(userRoom => userRoom.roomId === room.id) ? 'Leave' : 'Join'}
+                            </button>
                         </tr>
                     )}
                 </tbody>

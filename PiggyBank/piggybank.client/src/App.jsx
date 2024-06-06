@@ -16,7 +16,7 @@ function App() {
                         <Route path='expenses' element={<Expenses />}></Route>
                         <Route path='login' element={<Login />}></Route>
                         <Route path='register' element={<Register />}></Route>
-                        <Route path='rooms' element={<Rooms />}></Route>
+                        <Route path='available-rooms' element={<Rooms />}></Route>
                     </Routes>
                 </Layout>
             </BrowserRouter>
