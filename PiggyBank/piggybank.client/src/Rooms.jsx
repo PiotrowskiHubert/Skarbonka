@@ -1,17 +1,8 @@
 import { useEffect, useState } from 'react';
 import './Rooms.css';
 
-function showModal(roomName, status) {
-    const modal = document.getElementById("modal");
-    modal.querySelector("#info").innerText = "Successfully " + status + " room: " + roomName;
-    modal.showModal();
-}
-
-function closeModal() {
-    const modal = document.getElementById("modal");
-    modal.close();
-}
 export function Rooms() {
+    const [modalRoom, setModalRoom] = useState('');
     const [rooms, setRooms] = useState([]); // Initialize with an empty array
     const [userRooms, setUserRooms] = useState([]);
 
@@ -19,6 +10,30 @@ export function Rooms() {
         populateRoomsData();
         populateUserRoomsData();
     }, []);
+
+    function showModal(room, status) {
+        if (room.password !== null && status === "joined") {
+            const modal = document.getElementById("modal-password");
+            modal.showModal();
+        }
+        else {
+            const modal = document.getElementById("modal");
+            modal.querySelector("#info").innerText = "Successfully " + status + " room: " + room.name;
+            modal.showModal();
+            setUserRooms(prevUserRooms => [...prevUserRooms, { roomId: room.id }]);
+        }
+        setModalRoom(room);
+    }
+
+    function closeModal() {
+        if (modalRoom.password === null) {
+            const modal = document.getElementById("modal");
+        }
+        else {
+            const modal = document.getElementById("modal-password");
+        }
+        modal.close();
+    }
 
     async function populateRoomsData() {
         const response = await fetch('rooms');
@@ -56,8 +71,8 @@ export function Rooms() {
                 });
 
                 if (response.ok) {
+                    showModal(room, "left");
                     setUserRooms(prevUserRooms => prevUserRooms.filter(userRoom => userRoom.roomId !== room.id));
-                    showModal(room.name, "left");
                 } else {
                     console.error('Failed to leave room');
                 }
@@ -76,14 +91,24 @@ export function Rooms() {
                 });
 
                 if (response.ok) {
-                    setUserRooms(prevUserRooms => [...prevUserRooms, { roomId: room.id }]);
-                    showModal(room.name, "joined");
+                    showModal(room, "joined");
                 } else {
                     console.error('Failed to join room');
                 }
             } catch (error) {
                 console.error('Error:', error);
             }
+        }
+    }
+
+    async function checkPasswordToRoom() {
+        const password = document.getElementById('room-password').value;
+        if (modalRoom.password === password) {
+            document.getElementById('info-password').innerText = "Successfully joined the room";
+            setUserRooms(prevUserRooms => [...prevUserRooms, { roomId: room.id }]);
+        }
+        else {
+            document.getElementById('info-password').innerText = "Wrong password!";
         }
     }
 
@@ -118,6 +143,20 @@ export function Rooms() {
                         </button>
                     </div>
                     <p id="info"></p>
+                </dialog>
+                <dialog id="modal-password">
+                    <div class="close-modal">
+                        <button class="btn btn-primary rounded-circle p-2 lh-1" type="button" onClick={closeModal}>
+                            X
+                            <span class="visually-hidden">Dismiss</span>
+                        </button>
+                    </div>
+                    <p>Please enter password:</p>
+                    <input id="room-password" type="password"></input>
+                    <div id="center">
+                        <button id="confirm-password" onClick={checkPasswordToRoom}>Enter</button>
+                    </div>
+                    <p id="info-password"></p>
                 </dialog>
             </div>
         </div>

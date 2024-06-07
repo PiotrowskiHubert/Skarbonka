@@ -27,12 +27,14 @@ export function Expenses() {
             if (!sortedData[item.roomName]) {
                 sortedData[item.roomName] = [];
             }
-            sortedData[item.roomName].push({
-                expenseName: item.expenseName,
+            if (!sortedData[item.roomName][item.expenseName]) {
+                sortedData[item.roomName][item.expenseName] = [];
+            }
+            sortedData[item.roomName][item.expenseName].push({
                 purchaseDate: item.purchaseDate,
                 itemName: item.itemName,
                 itemPrice: item.itemPrice
-            });
+            })
         });
         setUserRooms(sortedData);
         console.log(userRooms); // Log the response
@@ -55,16 +57,32 @@ export function Expenses() {
                     {Object.keys(userRooms).map(roomName => (
                         <div key={roomName}>
                             <h2>{roomName}</h2>
-                            <ul>
-                                {userRooms[roomName].map((expense, index) => (
-                                    <div key={index}>
-                                        {index === 0 && <h3>{expense.expenseName}</h3>}
-                                        <div key={index}>
-                                            <p>{expense.itemName}: {expense.itemPrice}</p>
+                                {Object.entries(userRooms[roomName]).map(([expenseName, expense], index) => (
+                                    <div key={expenseName}>
+                                        <h3>{expenseName}</h3>
+                                        {expense.map((item, itemIndex) => (
+                                            <div key={itemIndex}>
+                                                <p>{item.itemName}: {item.itemPrice}</p>
+                                            </div>
+                                        ))}
+                                        <h3>Add new item</h3>
+                                        <div id="new-items">
+                                            <p>Name</p>
+                                            <input type="search" />
+                                            <p>Price</p>
+                                            <input type="search" />
+                                            <button class="btn btn-outline-secondary">Add</button>
                                         </div>
                                     </div>
                                 ))}
-                            </ul>
+                                <h3>Add new expense</h3>
+                                <div id="new-expenses">
+                                    <p>Name</p>
+                                <input type="search" />
+                                <p>Purchase Date</p>
+                                <input type="search" />
+                                <button class="btn btn-outline-secondary">Add</button>
+                                </div>
                         </div>
                     ))}
                 </tbody>

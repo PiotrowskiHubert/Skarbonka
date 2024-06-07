@@ -9,11 +9,17 @@ INSERT INTO Item(Name, Price) VALUES('Szczypior', 9.99);
 INSERT INTO Item(Name, Price, ExpenseId) VALUES('Papier toaletowy', 12.99, 1);
 INSERT INTO Item(Name, Price, ExpenseId) VALUES('Pomidor', 3.99, 2);
 INSERT INTO Item(Name, Price, ExpenseId) VALUES('Marchewka', 4.50, 2);
+INSERT INTO Item(Name, Price, ExpenseId) VALUES('Lodowka', 399.99, 3);
 
 SELECT * FROM Item;
 
 INSERT INTO Expense(Name, PurchaseDate, RoomId) VALUES('Papier toaletowy', '05/06/2024', 1);
 INSERT INTO Expense(Name, PurchaseDate, RoomUserId, RoomId) VALUES('Zakupy', '06/06/2024', 1, 2);
+INSERT INTO Expense(Name, PurchaseDate, RoomUserId, RoomId) VALUES('Zakupy', '06/06/2024', 1, 2);
+
+UPDATE Expense
+SET RoomUserId = 1
+WHERE Name LIKE 'Zakupy';
 
 SELECT * FROM Expense;
 

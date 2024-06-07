@@ -9,3 +9,13 @@ th, td {
     padding-left: 1rem;
     padding-right: 1rem;
 }
+
+#new-items{
+    display: flex;
+    justify-content: space-around;
+}
+
+#new-expenses {
+    display: flex;
+    justify-content: space-around;
+}
