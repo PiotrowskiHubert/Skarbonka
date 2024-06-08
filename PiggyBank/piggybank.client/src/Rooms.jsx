@@ -26,6 +26,7 @@ export function Rooms() {
     }
 
     function closeModal() {
+        debugger;
         if (modalRoom.password === null) {
             const modal = document.getElementById("modal");
         }
@@ -105,7 +106,7 @@ export function Rooms() {
         const password = document.getElementById('room-password').value;
         if (modalRoom.password === password) {
             document.getElementById('info-password').innerText = "Successfully joined the room";
-            setUserRooms(prevUserRooms => [...prevUserRooms, { roomId: room.id }]);
+            setUserRooms(prevUserRooms => [...prevUserRooms, { roomId: modalRoom.id }]);
         }
         else {
             document.getElementById('info-password').innerText = "Wrong password!";
@@ -154,7 +155,7 @@ export function Rooms() {
                     <p>Please enter password:</p>
                     <input id="room-password" type="password"></input>
                     <div id="center">
-                        <button id="confirm-password" onClick={checkPasswordToRoom}>Enter</button>
+                        <button id="confirm-password" class="btn btn-outline-secondary" onClick={checkPasswordToRoom}>Enter</button>
                     </div>
                     <p id="info-password"></p>
                 </dialog>
