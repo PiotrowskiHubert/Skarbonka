@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.34916.146
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PiggyBank.Server", "PiggyBank.Server\PiggyBank.Server.csproj", "{6715BEE8-8ECE-4501-97A6-6D2210BCA203}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PiggyBank.Server", "PiggyBank.Server\PiggyBank.Server.csproj", "{6715BEE8-8ECE-4501-97A6-6D2210BCA203}"
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "piggybank.client", "piggybank.client\piggybank.client.esproj", "{67CCB619-F039-4139-B4FF-250BE7B42458}"
 EndProject

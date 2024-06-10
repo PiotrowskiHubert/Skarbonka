@@ -1,4 +1,6 @@
 using PiggyBank.Repositories;
+using PiggyBank.Server.Repositories;
+using PiggyBank.Server.Services;
 using PiggyBank.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +13,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IItemsRepository, ItemsRepository>();
 builder.Services.AddScoped<IItemsService, ItemsService>();
+builder.Services.AddScoped<IRoomsRepository, RoomsRepository>();
+builder.Services.AddScoped<IRoomsService, RoomsService>();
+builder.Services.AddScoped<IUsersRepository, UsersRepository>();
+builder.Services.AddScoped<IUsersService, UsersService>();
 
 var app = builder.Build();
 
