@@ -81,6 +81,12 @@ namespace PiggyBank
             SaveChanges();
         }
 
+        public void AddExpense(Expense expense)
+        {
+            Expense.Add(expense);
+            SaveChanges();
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)

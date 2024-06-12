@@ -10,6 +10,7 @@ namespace PiggyBank.Repositories
         List<Item> GetItems();
         List<RoomExpenseDto> GetRoomExpenses(int userId);
         void AddItem(Item item);
+        void AddExpense(Expense expense);
     }
 
     internal class ItemsRepository : IItemsRepository
@@ -35,6 +36,14 @@ namespace PiggyBank.Repositories
             using (var dbContext = new DbContext())
             {
                 dbContext.AddItem(item);
+            }
+        }
+
+        public void AddExpense(Expense expense)
+        {
+            using (var dbContext = new DbContext())
+            {
+                dbContext.AddExpense(expense);
             }
         }
     }

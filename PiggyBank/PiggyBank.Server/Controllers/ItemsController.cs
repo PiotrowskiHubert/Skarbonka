@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PiggyBank.Models;
 using PiggyBank.Server.Dtos;
+using PiggyBank.Server.Models;
 using PiggyBank.Services;
 
 namespace PiggyBank.Controllers
@@ -40,6 +41,20 @@ namespace PiggyBank.Controllers
             else
             {
                 return BadRequest();
+            }
+        }
+
+        [HttpPost("AddExpense", Name = "AddExpense")]
+        public IActionResult AddExpense([FromBody] Expense expense)
+        {
+            if (expense != null)
+            {
+                _itemsService.AddExpense(expense);
+                return Ok(new { message = "Successfully added new expense" });
+            }
+            else
+            {
+                return BadRequest("Invalid request");
             }
         }
 
