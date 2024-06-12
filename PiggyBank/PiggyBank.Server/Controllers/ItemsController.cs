@@ -29,5 +29,19 @@ namespace PiggyBank.Controllers
             return items;
         }
 
+        [HttpPost("AddItem", Name = "AddItem")]
+        public IActionResult AddItem([FromBody] Item item)
+        {
+            if (item != null)
+            {
+                _itemsService.AddItem(item);
+                return Ok(new { message = "Successfully added new item" });
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
     }
 }

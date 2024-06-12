@@ -26,14 +26,14 @@ export function Rooms() {
     }
 
     function closeModal() {
-        debugger;
-        if (modalRoom.password === null) {
-            const modal = document.getElementById("modal");
+        if (modalRoom.password !== null) {
+            const modal = document.getElementById("modal-password");
+            modal.close();
         }
         else {
-            const modal = document.getElementById("modal-password");
+            const modal = document.getElementById("modal");
+            modal.close();
         }
-        modal.close();
     }
 
     async function populateRoomsData() {

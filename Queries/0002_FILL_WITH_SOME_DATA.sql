@@ -15,7 +15,7 @@ SELECT * FROM Item;
 
 INSERT INTO Expense(Name, PurchaseDate, RoomId) VALUES('Papier toaletowy', '05/06/2024', 1);
 INSERT INTO Expense(Name, PurchaseDate, RoomUserId, RoomId) VALUES('Zakupy', '06/06/2024', 1, 2);
-INSERT INTO Expense(Name, PurchaseDate, RoomUserId, RoomId) VALUES('Zakupy', '06/06/2024', 1, 2);
+INSERT INTO Expense(Name, PurchaseDate, RoomUserId, RoomId) VALUES('AGD', '06/06/2024', 1, 2);
 
 UPDATE Expense
 SET RoomUserId = 1

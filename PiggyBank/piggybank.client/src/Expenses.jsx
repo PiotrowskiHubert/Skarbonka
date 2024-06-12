@@ -5,6 +5,8 @@ import { React, Fragment } from 'react';
 export function Expenses() {
     const [items, setItems] = useState([]); // Initialize with an empty array
     const [userRooms, setUserRooms] = useState([]);
+    const [itemName, setItemName] = useState('');
+    const [itemPrice, setItemPrice] = useState('');
 
     useEffect(() => {
         populateItemsData();
@@ -33,11 +35,74 @@ export function Expenses() {
             sortedData[item.roomName][item.expenseName].push({
                 purchaseDate: item.purchaseDate,
                 itemName: item.itemName,
-                itemPrice: item.itemPrice
+                itemPrice: item.itemPrice,
+                roomName: item.roomName,
+                expenseId: item.expenseId
             })
         });
         setUserRooms(sortedData);
         console.log(userRooms); // Log the response
+    }
+
+    const handleSubmitItem = async (roomName, expenseName, item) => {
+        // Check if the provided roomName matches the available room
+        if (userRooms.hasOwnProperty(roomName)) {
+            // Access the expenses array for the given room
+            const expensesArray = userRooms[roomName];
+            // Iterate over each expense in the expenses array
+            if (expensesArray.hasOwnProperty(expenseName)) {
+                const itemsArray = expensesArray[expenseName];
+                // Check if the current expense matches the provided expense
+
+                    try {
+                        const itemToAdd = {
+                            Name: item.name,
+                            Price: item.price,
+                            ExpenseId: itemsArray[0].expenseId
+                        };
+
+                        // Make a POST request to add the item
+                        const response = await fetch(`items/AddItem?item=${itemToAdd}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(itemToAdd),
+                        });
+
+                        // Check if the response is ok
+                        if (response.ok) {
+                            // Push the new item to the expense list
+                            itemsArray.push({
+                                itemName: item.name,
+                                itemPrice: item.price,
+                                roomName: roomName,
+                                expenseId: itemsArray[0].expenseId
+                            });
+                        } else {
+                            console.error('Failed to add item');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+            }
+        } else {
+            console.error('Room not found');
+        }
+    };
+
+    const handleFormSubmit = (roomName, expenseName) => (e) => {
+        e.preventDefault();
+        const item = {
+            name: itemName,
+            price: itemPrice
+        };
+        handleSubmitItem(roomName, expenseName, item);
+    };
+
+
+    async function handleSubmitExpense(room) {
+
     }
 
     useEffect(() => {
@@ -66,22 +131,26 @@ export function Expenses() {
                                             </div>
                                         ))}
                                         <h3>Add new item</h3>
-                                        <div id="new-items">
+                                        <div class="new-items">
+                                            <form class="item-form" onSubmit={handleFormSubmit(roomName, expenseName)}>
                                             <p>Name</p>
-                                            <input type="search" />
+                                                <input type="search" onChange={(e) => setItemName(e.target.value)} />
                                             <p>Price</p>
-                                            <input type="search" />
-                                            <button class="btn btn-outline-secondary">Add</button>
+                                                <input type="search" onChange={(e) => setItemPrice(e.target.value)} />
+                                            <button class="btn btn-outline-secondary" type="submit">Add</button>
+                                        </form>
                                         </div>
                                     </div>
                                 ))}
                                 <h3>Add new expense</h3>
-                                <div id="new-expenses">
+                            <div class="new-expenses">
+                                <form class="expense-form" onSubmit={handleSubmitExpense}>
                                     <p>Name</p>
                                 <input type="search" />
                                 <p>Purchase Date</p>
                                 <input type="search" />
-                                <button class="btn btn-outline-secondary">Add</button>
+                                    <button class="btn btn-outline-secondary" type="submit">Add</button>
+                                </form>
                                 </div>
                         </div>
                     ))}

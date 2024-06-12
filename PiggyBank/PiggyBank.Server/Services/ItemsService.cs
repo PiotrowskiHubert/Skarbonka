@@ -8,6 +8,7 @@ namespace PiggyBank.Services
     {
         List<Item> GetItems();
         List<RoomExpenseDto> GetRoomExpenses(int userId);
+        void AddItem(Item item);
     }
 
     internal class ItemsService : IItemsService
@@ -28,6 +29,11 @@ namespace PiggyBank.Services
             {
                 return _itemsRepository.GetRoomExpenses(userId);
             }
+        }
+
+        public void AddItem(Item item)
+        {
+            _itemsRepository.AddItem(item);
         }
     }
 }

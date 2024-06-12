@@ -63,7 +63,9 @@ namespace PiggyBank
                          where roomUser.Id == userId
                          select new RoomExpenseDto
                          {
+                             RoomId = room.Id,
                              RoomName = room.Name,
+                             ExpenseId = expense.Id,
                              ExpenseName = expense.Name,
                              PurchaseDate = expense.PurchaseDate,
                              ItemName = item.Name,
@@ -71,6 +73,12 @@ namespace PiggyBank
                          };
 
             return result.ToList();
+        }
+
+        public void AddItem(Item item)
+        {
+            Item.Add(item);
+            SaveChanges();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
