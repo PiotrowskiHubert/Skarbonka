@@ -42,6 +42,7 @@ export function Expenses() {
                 purchaseDate: item.purchaseDate,
                 itemName: item.itemName,
                 itemPrice: item.itemPrice,
+                itemId: item.itemId,
                 roomName: item.roomName,
                 expenseId: item.expenseId,
                 expenseName: item.expenseName,
@@ -170,6 +171,35 @@ export function Expenses() {
         return sum;
     };
 
+    const removeItem = async (expenseId, item) => {
+        try {
+            const itemToRemove = {
+                Id: item.itemId,
+                Name: item.itemName,
+                Price: item.itemPrice,
+                ExpenseId: expenseId
+            };
+            debugger;
+            // Make a POST request to add the item
+            const response = await fetch('items/RemoveItem', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(itemToRemove),
+            });
+
+            // Check if the response is ok
+            if (response.ok) {
+                // Remove item from array IMPLEMENT IT!
+            } else {
+                console.error('Failed to add item');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
     useEffect(() => {
         console.log(userRooms);
     }, [userRooms]);
@@ -200,7 +230,7 @@ export function Expenses() {
                                                     {item.itemName !== null ? (
                                                         <>
                                                             <p>{item.itemName}: {item.itemPrice}</p>
-                                                            <button className="btn btn-outline-secondary" type="button">X</button>
+                                                            <button className="btn btn-outline-secondary" type="button" onClick={()=>removeItem(expenseId, item)}>X</button>
                                                         </>
                                                     ) : (
                                                         <p>No items</p>

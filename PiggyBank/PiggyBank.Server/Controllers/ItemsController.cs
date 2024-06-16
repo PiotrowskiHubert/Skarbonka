@@ -58,5 +58,19 @@ namespace PiggyBank.Controllers
             }
         }
 
+        [HttpPost("RemoveItem", Name = "RemoveItem")]
+        public IActionResult RemoveItem([FromBody] Item item)
+        {
+            if (item != null)
+            {
+                _itemsService.RemoveItem(item);
+                return Ok(new { message = "Successfully removed item" });
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
     }
 }

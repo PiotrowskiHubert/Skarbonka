@@ -70,7 +70,8 @@ namespace PiggyBank
                              ExpenseName = expense.Name,
                              PurchaseDate = expense.PurchaseDate,
                              ItemName = i.Name,
-                             ItemPrice = i.Price
+                             ItemPrice = i.Price,
+                             ItemId = i.Id
                          };
 
             return result.ToList();
@@ -85,6 +86,12 @@ namespace PiggyBank
         public void AddExpense(Expense expense)
         {
             Expense.Add(expense);
+            SaveChanges();
+        }
+
+        public void RemoveItem(Item item)
+        {
+            Item.Remove(item);
             SaveChanges();
         }
 
