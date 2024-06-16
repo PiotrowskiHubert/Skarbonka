@@ -10,6 +10,7 @@ INSERT INTO Item(Name, Price, ExpenseId) VALUES('Papier toaletowy', 12.99, 1);
 INSERT INTO Item(Name, Price, ExpenseId) VALUES('Pomidor', 3.99, 2);
 INSERT INTO Item(Name, Price, ExpenseId) VALUES('Marchewka', 4.50, 2);
 INSERT INTO Item(Name, Price, ExpenseId) VALUES('Lodowka', 399.99, 3);
+INSERT INTO Item(Name, Price, ExpenseId) VALUES('Item', 5.99, 1007);
 
 SELECT * FROM Item;
 
@@ -19,7 +20,7 @@ INSERT INTO Expense(Name, PurchaseDate, RoomUserId, RoomId) VALUES('AGD', '06/06
 
 UPDATE Expense
 SET RoomUserId = 1
-WHERE Name LIKE 'Zakupy';
+WHERE Name LIKE 'AGD';
 
 SELECT * FROM Expense;
 
@@ -40,6 +41,6 @@ INNER JOIN Room_RoomUser ON Room.Id = Room_RoomUser.RoomId;
 
 SELECT Room.Name, Expense.Name, PurchaseDate, Item.Name, Item.Price FROM Room
 INNER JOIN Expense ON Room.Id = Expense.RoomId
-INNER JOIN Item ON Expense.Id = Item.ExpenseId
+LEFT JOIN Item ON Expense.Id = Item.ExpenseId
 INNER JOIN RoomUser ON Expense.RoomUserId = RoomUser.Id
 WHERE RoomUser.Id = 1;

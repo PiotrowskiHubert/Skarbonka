@@ -19,3 +19,8 @@ th, td {
     display: flex;
     justify-content: space-around;
 }
+
+.one-row{
+    display: flex;
+    justify-content: space-between;
+}
