@@ -161,6 +161,15 @@ export function Expenses() {
         handleSubmitExpense(roomId, expense);
     };
 
+    const countSumOfItems = (roomId, expenseId) => (e) => {
+        let sum = 0;
+        userRooms[roomId][expenseId].items.forEach((item) => {
+            sum += item.itemPrice;
+        });
+        sum = sum.toFixed(2);
+        return sum;
+    };
+
     useEffect(() => {
         console.log(userRooms);
     }, [userRooms]);
@@ -201,6 +210,7 @@ export function Expenses() {
                                         ) : (
                                             <p>No items</p> // Render this if no items are present
                                         )}
+                                        <p>Summary price of items: {countSumOfItems(roomId, expenseId)()}</p>
                                     </div>
 
                                     <h3>Add new item</h3>
