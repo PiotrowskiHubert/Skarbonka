@@ -1,6 +1,7 @@
 ﻿using PiggyBank.Models;
 using PiggyBank.Repositories;
 using PiggyBank.Server.Dtos;
+using PiggyBank.Server.Models;
 
 namespace PiggyBank.Services
 {
@@ -8,6 +9,8 @@ namespace PiggyBank.Services
     {
         List<Item> GetItems();
         List<RoomExpenseDto> GetRoomExpenses(int userId);
+        void AddItem(Item item);
+        void AddExpense(Expense expense);
     }
 
     internal class ItemsService : IItemsService
@@ -28,6 +31,16 @@ namespace PiggyBank.Services
             {
                 return _itemsRepository.GetRoomExpenses(userId);
             }
+        }
+
+        public void AddItem(Item item)
+        {
+            _itemsRepository.AddItem(item);
+        }
+
+        public void AddExpense(Expense expense)
+        {
+            _itemsRepository.AddExpense(expense);
         }
     }
 }

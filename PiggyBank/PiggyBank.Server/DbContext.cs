@@ -58,19 +58,34 @@ namespace PiggyBank
         {
             var result = from room in Room
                          join expense in Expense on room.Id equals expense.RoomId
-                         join item in Item on expense.Id equals item.ExpenseId
+                         join item in Item on expense.Id equals item.ExpenseId into Item
+                         from i in Item.DefaultIfEmpty()
                          join roomUser in RoomUser on expense.RoomUserId equals roomUser.Id
                          where roomUser.Id == userId
                          select new RoomExpenseDto
                          {
+                             RoomId = room.Id,
                              RoomName = room.Name,
+                             ExpenseId = expense.Id,
                              ExpenseName = expense.Name,
                              PurchaseDate = expense.PurchaseDate,
-                             ItemName = item.Name,
-                             ItemPrice = item.Price
+                             ItemName = i.Name,
+                             ItemPrice = i.Price
                          };
 
             return result.ToList();
+        }
+
+        public void AddItem(Item item)
+        {
+            Item.Add(item);
+            SaveChanges();
+        }
+
+        public void AddExpense(Expense expense)
+        {
+            Expense.Add(expense);
+            SaveChanges();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
