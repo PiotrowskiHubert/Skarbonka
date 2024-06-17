@@ -12,6 +12,7 @@ namespace PiggyBank.Repositories
         void AddItem(Item item);
         void AddExpense(Expense expense);
         void RemoveItem(Item item);
+        void RemoveExpense(int expenseId);
     }
 
     internal class ItemsRepository : IItemsRepository
@@ -53,6 +54,14 @@ namespace PiggyBank.Repositories
             using (var dbContext = new DbContext())
             {
                 dbContext.RemoveItem(item);
+            }
+        }
+
+        public void RemoveExpense(int expenseId)
+        {
+            using (var dbContext = new DbContext())
+            {
+                dbContext.RemoveExpense(expenseId);
             }
         }
         

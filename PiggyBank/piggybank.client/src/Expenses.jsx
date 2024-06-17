@@ -179,7 +179,6 @@ export function Expenses() {
                 Price: item.itemPrice,
                 ExpenseId: expenseId
             };
-            debugger;
             // Make a POST request to add the item
             const response = await fetch('items/RemoveItem', {
                 method: 'POST',
@@ -194,6 +193,25 @@ export function Expenses() {
                 // Remove item from array IMPLEMENT IT!
             } else {
                 console.error('Failed to add item');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    const removeExpense = async (expenseId) => {
+        try {
+            debugger;
+            // Make a POST request to add the item
+            const response = await fetch(`items/RemoveExpense?expenseId=${expenseId}`, {
+                method: 'POST'
+            });
+
+            // Check if the response is ok
+            if (response.ok) {
+                // Remove item from array IMPLEMENT IT!
+            } else {
+                console.error('Failed to remove item');
             }
         } catch (error) {
             console.error('Error:', error);
@@ -221,8 +239,10 @@ export function Expenses() {
                             )}
                             {Object.keys(userRooms[roomId]).map(expenseId => (
                                 <div class="h-100 p-5 bg-body-tertiary border rounded-3" key={expenseId}>
-                                    <h3>{userRooms[roomId][expenseId].expenseName}</h3>
-
+                                    <div className="one-row">
+                                        <h3>{userRooms[roomId][expenseId].expenseName}</h3>
+                                        <button className="btn btn-outline-secondary" type="button" onClick={() => removeExpense(expenseId)}>X</button>
+                                    </div>
                                     <div>
                                         {userRooms[roomId][expenseId].items.length > 0 ? (
                                             userRooms[roomId][expenseId].items.map((item, itemIndex) => (

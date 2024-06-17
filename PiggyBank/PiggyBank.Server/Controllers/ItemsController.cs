@@ -72,5 +72,19 @@ namespace PiggyBank.Controllers
             }
         }
 
+        [HttpPost("RemoveExpense", Name = "RemoveExpense")]
+        public IActionResult RemoveExpense([FromQuery] int expenseId)
+        {
+            if (expenseId != null)
+            {
+                _itemsService.RemoveExpense(expenseId);
+                return Ok(new { message = "Successfully removed item" });
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
     }
 }

@@ -95,6 +95,24 @@ namespace PiggyBank
             SaveChanges();
         }
 
+        public void RemoveExpense(int expenseId)
+        {
+            var expense = Expense.Where(e => e.Id == expenseId).FirstOrDefault();
+            var items = Item.Where(i => i.ExpenseId == expenseId);
+            if (items != null)
+            {
+                foreach (var item in items) {
+                    Item.Remove(item);
+                }
+            }
+            SaveChanges();
+            if (expense != null)
+            {
+                Expense.Remove(expense);
+            }
+            SaveChanges();
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
