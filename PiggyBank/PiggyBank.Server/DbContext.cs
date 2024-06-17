@@ -85,8 +85,19 @@ namespace PiggyBank
 
         public void AddExpense(Expense expense)
         {
-            Expense.Add(expense);
             SaveChanges();
+            var roomUsersInSameRoom = RoomUser
+                .Where(ru => Room_RoomUser.Any(rr => rr.RoomId ==
+                    Expense.Where(e => e.Id == expense.Id)
+                                    .Select(e => e.RoomId)
+                                    .FirstOrDefault()))
+                .ToList();
+
+            foreach(var roomUser in roomUsersInSameRoom)
+            {
+                expense.RoomUserId = roomUser.Id;
+                Expense.Add(expense);
+            }
         }
 
         public void RemoveItem(Item item)

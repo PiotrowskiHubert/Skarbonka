@@ -26,5 +26,19 @@ namespace PiggyBank.Server.Controllers
                 return NotFound();
             }
         }
+
+        [HttpPost("RegisterUser", Name = "RegisterUser")]
+        public IActionResult RegisterUser([FromQuery] string username, [FromQuery] string password)
+        {
+            bool isRegistered = _usersService.RegisterUser(username, password);
+            if (isRegistered)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
     }
 }

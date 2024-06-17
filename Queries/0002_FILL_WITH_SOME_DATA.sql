@@ -44,3 +44,6 @@ INNER JOIN Expense ON Room.Id = Expense.RoomId
 LEFT JOIN Item ON Expense.Id = Item.ExpenseId
 INNER JOIN RoomUser ON Expense.RoomUserId = RoomUser.Id
 WHERE RoomUser.Id = 1;
+
+SELECT RoomUser.Id FROM RoomUser 
+INNER JOIN Expense ON RoomUser.Id = Expense.RoomUserId; 
