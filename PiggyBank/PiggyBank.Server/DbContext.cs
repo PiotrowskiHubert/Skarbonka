@@ -70,7 +70,8 @@ namespace PiggyBank
                              ExpenseName = expense.Name,
                              PurchaseDate = expense.PurchaseDate,
                              ItemName = i.Name,
-                             ItemPrice = i.Price
+                             ItemPrice = i.Price,
+                             ItemId = i.Id
                          };
 
             return result.ToList();
@@ -84,7 +85,42 @@ namespace PiggyBank
 
         public void AddExpense(Expense expense)
         {
-            Expense.Add(expense);
+            SaveChanges();
+            var roomUsersInSameRoom = RoomUser
+                .Where(ru => Room_RoomUser.Any(rr => rr.RoomId ==
+                    Expense.Where(e => e.Id == expense.Id)
+                                    .Select(e => e.RoomId)
+                                    .FirstOrDefault()))
+                .ToList();
+
+            foreach(var roomUser in roomUsersInSameRoom)
+            {
+                expense.RoomUserId = roomUser.Id;
+                Expense.Add(expense);
+            }
+        }
+
+        public void RemoveItem(Item item)
+        {
+            Item.Remove(item);
+            SaveChanges();
+        }
+
+        public void RemoveExpense(int expenseId)
+        {
+            var expense = Expense.Where(e => e.Id == expenseId).FirstOrDefault();
+            var items = Item.Where(i => i.ExpenseId == expenseId);
+            if (items != null)
+            {
+                foreach (var item in items) {
+                    Item.Remove(item);
+                }
+            }
+            SaveChanges();
+            if (expense != null)
+            {
+                Expense.Remove(expense);
+            }
             SaveChanges();
         }
 

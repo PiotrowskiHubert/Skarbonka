@@ -42,6 +42,7 @@ export function Expenses() {
                 purchaseDate: item.purchaseDate,
                 itemName: item.itemName,
                 itemPrice: item.itemPrice,
+                itemId: item.itemId,
                 roomName: item.roomName,
                 expenseId: item.expenseId,
                 expenseName: item.expenseName,
@@ -161,6 +162,62 @@ export function Expenses() {
         handleSubmitExpense(roomId, expense);
     };
 
+    const countSumOfItems = (roomId, expenseId) => (e) => {
+        let sum = 0;
+        userRooms[roomId][expenseId].items.forEach((item) => {
+            sum += item.itemPrice;
+        });
+        sum = sum.toFixed(2);
+        return sum;
+    };
+
+    const removeItem = async (expenseId, item) => {
+        try {
+            const itemToRemove = {
+                Id: item.itemId,
+                Name: item.itemName,
+                Price: item.itemPrice,
+                ExpenseId: expenseId
+            };
+            // Make a POST request to add the item
+            const response = await fetch('items/RemoveItem', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(itemToRemove),
+            });
+
+            // Check if the response is ok
+            if (response.ok) {
+                // Remove item from array IMPLEMENT IT!
+            } else {
+                console.error('Failed to add item');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    const removeExpense = async (expenseId) => {
+        try {
+            debugger;
+            // Make a POST request to add the item
+            const response = await fetch(`items/RemoveExpense?expenseId=${expenseId}`, {
+                method: 'POST'
+            });
+
+            // Check if the response is ok
+            if (response.ok) {
+                // Remove item from array IMPLEMENT IT!
+            } else {
+                console.error('Failed to remove item');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
     useEffect(() => {
         console.log(userRooms);
     }, [userRooms]);
@@ -182,8 +239,10 @@ export function Expenses() {
                             )}
                             {Object.keys(userRooms[roomId]).map(expenseId => (
                                 <div class="h-100 p-5 bg-body-tertiary border rounded-3" key={expenseId}>
-                                    <h3>{userRooms[roomId][expenseId].expenseName}</h3>
-
+                                    <div className="one-row">
+                                        <h3>{userRooms[roomId][expenseId].expenseName}</h3>
+                                        <button className="btn btn-outline-secondary" type="button" onClick={() => removeExpense(expenseId)}>X</button>
+                                    </div>
                                     <div>
                                         {userRooms[roomId][expenseId].items.length > 0 ? (
                                             userRooms[roomId][expenseId].items.map((item, itemIndex) => (
@@ -191,7 +250,7 @@ export function Expenses() {
                                                     {item.itemName !== null ? (
                                                         <>
                                                             <p>{item.itemName}: {item.itemPrice}</p>
-                                                            <button className="btn btn-outline-secondary" type="button">X</button>
+                                                            <button className="btn btn-outline-secondary" type="button" onClick={()=>removeItem(expenseId, item)}>X</button>
                                                         </>
                                                     ) : (
                                                         <p>No items</p>
@@ -201,6 +260,7 @@ export function Expenses() {
                                         ) : (
                                             <p>No items</p> // Render this if no items are present
                                         )}
+                                        <p>Summary price of items: {countSumOfItems(roomId, expenseId)()}</p>
                                     </div>
 
                                     <h3>Add new item</h3>

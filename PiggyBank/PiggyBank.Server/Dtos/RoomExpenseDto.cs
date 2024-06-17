@@ -9,5 +9,6 @@
         public DateTime PurchaseDate { get; set; }
         public string? ItemName { get; set; }
         public double? ItemPrice { get; set; }
+        public int? ItemId { get; set; }
     }
 }

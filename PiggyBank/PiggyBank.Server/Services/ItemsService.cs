@@ -11,6 +11,8 @@ namespace PiggyBank.Services
         List<RoomExpenseDto> GetRoomExpenses(int userId);
         void AddItem(Item item);
         void AddExpense(Expense expense);
+        void RemoveItem(Item item);
+        void RemoveExpense(int expenseId);
     }
 
     internal class ItemsService : IItemsService
@@ -41,6 +43,16 @@ namespace PiggyBank.Services
         public void AddExpense(Expense expense)
         {
             _itemsRepository.AddExpense(expense);
+        }
+
+        public void RemoveItem(Item item)
+        {
+            _itemsRepository.RemoveItem(item);
+        }
+
+        public void RemoveExpense(int expenseId)
+        {
+            _itemsRepository.RemoveExpense(expenseId);
         }
     }
 }
