@@ -5,13 +5,15 @@ import { useNavigate } from 'react-router-dom';
 export function Register() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [surname, setSurname] = useState('');
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         debugger;
         e.preventDefault();
         try {
-            const response = await fetch(`users/RegisterUser?username=${username}&password=${password}`,
+            const response = await fetch(`users/RegisterUser?username=${username}&password=${password}&firstName=${firstName}&surname=${surname}`,
                 {
                     method: 'POST'                
                 });
@@ -32,7 +34,14 @@ export function Register() {
                 <form onSubmit={handleSubmit}>
                     <img class="mb-4" src={logo} alt="" width="72" height="57" />
                     <h1 class="h3 mb-3 fw-normal">Create an account</h1>
-
+                    <div class="form-floating">
+                        <input class="form-control" id="floatingInput" placeholder="name@example.com" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                        <label for="floatingInput">First Name</label>
+                    </div>
+                    <div class="form-floating">
+                        <input class="form-control" id="floatingInput" placeholder="name@example.com" value={surname} onChange={(e) => setSurname(e.target.value)} />
+                        <label for="floatingInput">Surname</label>
+                    </div>
                     <div class="form-floating">
                         <input class="form-control" id="floatingInput" placeholder="name@example.com" value={username} onChange={(e) => setUsername(e.target.value)} />
                         <label for="floatingInput">Username</label>

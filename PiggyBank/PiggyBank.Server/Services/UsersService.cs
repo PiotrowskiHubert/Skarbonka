@@ -6,7 +6,7 @@ namespace PiggyBank.Server.Services
     public interface IUsersService
     {
         Users GetUser(string username, string password);
-        bool RegisterUser(string username, string password);
+        bool RegisterUser(string username, string password, string firstName, string surname);
     }
 
     internal class UsersService : IUsersService
@@ -21,9 +21,9 @@ namespace PiggyBank.Server.Services
             return _usersRepository.GetUser(username, password);
         }
 
-        public bool RegisterUser(string username, string password)
+        public bool RegisterUser(string username, string password, string firstName, string surname)
         {
-            return _usersRepository.RegisterUser(username, password);
+            return _usersRepository.RegisterUser(username, password, firstName, surname);
         }
     }
 }
