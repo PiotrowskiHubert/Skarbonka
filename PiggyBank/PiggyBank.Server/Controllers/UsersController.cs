@@ -28,9 +28,9 @@ namespace PiggyBank.Server.Controllers
         }
 
         [HttpPost("RegisterUser", Name = "RegisterUser")]
-        public IActionResult RegisterUser([FromQuery] string username, [FromQuery] string password)
+        public IActionResult RegisterUser([FromQuery] string username, [FromQuery] string password, [FromQuery] string firstName, [FromQuery] string surname)
         {
-            bool isRegistered = _usersService.RegisterUser(username, password);
+            bool isRegistered = _usersService.RegisterUser(username, password, firstName, surname);
             if (isRegistered)
             {
                 return Ok();

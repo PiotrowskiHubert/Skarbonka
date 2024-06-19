@@ -1,11 +1,12 @@
-﻿using PiggyBank.Server.Models;
+﻿using PiggyBank.Models;
+using PiggyBank.Server.Models;
 
 namespace PiggyBank.Server.Repositories
 {
     internal interface IUsersRepository
     {
         Users GetUser(string username, string password);
-        bool RegisterUser(string username, string password);
+        bool RegisterUser(string username, string password, string firstName, string surname);
     }
     internal class UsersRepository : IUsersRepository
     {
@@ -31,15 +32,25 @@ namespace PiggyBank.Server.Repositories
             }
         }
 
-        public bool RegisterUser(string username, string password) 
+        public bool RegisterUser(string username, string password, string firstName, string surname) 
         {
             using (var dbContext = new DbContext())
             {
                 var existingUser = dbContext.Users.FirstOrDefault(u => u.Username == username);
                 if (existingUser == null)
                 {
+                    RoomUser roomUser = new RoomUser
+                    {
+                        FirstName = firstName,
+                        Surname = surname
+                    };
+
+                    dbContext.RoomUser.Add(roomUser);
+                    dbContext.SaveChanges();
+
                     Users user = new Users
                     {
+                        Id = roomUser.Id,
                         Username = username,
                         Password = password
                     };
