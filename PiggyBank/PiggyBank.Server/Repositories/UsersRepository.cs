@@ -50,9 +50,9 @@ namespace PiggyBank.Server.Repositories
 
                     Users user = new Users
                     {
-                        Id = roomUser.Id,
                         Username = username,
-                        Password = password
+                        Password = password,
+                        RoomUserId = roomUser.Id
                     };
                     dbContext.Users.Add(user);
                     dbContext.SaveChanges();
