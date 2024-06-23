@@ -10,7 +10,6 @@ export function Register() {
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
-        debugger;
         e.preventDefault();
         try {
             const response = await fetch(`users/RegisterUser?username=${username}&password=${password}&firstName=${firstName}&surname=${surname}`,

@@ -10,6 +10,7 @@ namespace PiggyBank.Server.Services
         void JoinRoom(Room_RoomUser roomRoomUser);
         void LeaveRoom(Room_RoomUser roomRoomUser);
         List<Room_RoomUser> GetUserRooms(int userId);
+        void CreateRoom(Room room);
     }
     internal class RoomsService : IRoomsService
     {
@@ -38,6 +39,11 @@ namespace PiggyBank.Server.Services
         public List<Room_RoomUser> GetUserRooms(int userId)
         {
             return _roomsRepository.GetUserRooms(userId);
+        }
+
+        public void CreateRoom(Room room)
+        {
+            _roomsRepository.CreateRoom(room);
         }
     }
 }

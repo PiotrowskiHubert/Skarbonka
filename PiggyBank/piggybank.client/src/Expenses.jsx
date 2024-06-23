@@ -4,6 +4,7 @@ import { React, Fragment } from 'react';
 
 export function Expenses() {
     const [items, setItems] = useState([]); // Initialize with an empty array
+    const [rooms, setRooms] = useState([]); // Initialize with an empty array
     const [userRooms, setUserRooms] = useState([]);
     const [itemName, setItemName] = useState('');
     const [itemPrice, setItemPrice] = useState('');
@@ -30,15 +31,18 @@ export function Expenses() {
 
         data.forEach(item => {
             if (!sortedData[item.roomId]) {
-                sortedData[item.roomId] = {};
+                sortedData[item.roomId] = {
+                    roomName: item.roomName,
+                    expenses: {}
+                };
             }
-            if (!sortedData[item.roomId][item.expenseId]) {
-                sortedData[item.roomId][item.expenseId] = {
+            if (!sortedData[item.roomId].expenses[item.expenseId]) {
+                sortedData[item.roomId].expenses[item.expenseId] = {
                     expenseName: item.expenseName,
                     items: []
                 };
             }
-            sortedData[item.roomId][item.expenseId].items.push({
+            sortedData[item.roomId].expenses[item.expenseId].items.push({
                 purchaseDate: item.purchaseDate,
                 itemName: item.itemName,
                 itemPrice: item.itemPrice,
@@ -50,14 +54,15 @@ export function Expenses() {
             });
         });
         setUserRooms(sortedData);
-        console.log(userRooms); // Log the response
+        console.log(sortedData); // Log the sorted data
     }
 
     const handleSubmitItem = async (roomId, expenseId, item) => {
+        debugger;
         // Check if the provided roomName matches the available room
         if (userRooms.hasOwnProperty(roomId)) {
             // Access the expenses array for the given room
-            const expensesArray = userRooms[roomId];
+            const expensesArray = userRooms[roomId].expenses;
             // Iterate over each expense in the expenses array
             if (expensesArray.hasOwnProperty(expenseId)) {
                 const itemsArray = expensesArray[expenseId];
@@ -69,7 +74,6 @@ export function Expenses() {
                             Price: item.price,
                             ExpenseId: expenseId
                         };
-                        debugger;
                         // Make a POST request to add the item
                         const response = await fetch('items/AddItem', {
                             method: 'POST',
@@ -114,7 +118,7 @@ export function Expenses() {
         // Check if the provided roomName matches the available room
         if (userRooms.hasOwnProperty(roomId)) {
             // Access the expenses array for the given room
-            const expensesArray = userRooms[roomId];
+            const expensesArray = userRooms[roomId].expenses;
             // Iterate over each expense in the expenses array
                 try {
                     const expenseToAdd = {
@@ -123,7 +127,6 @@ export function Expenses() {
                         RoomId: roomId,
                         RoomUserId: JSON.parse(localStorage.getItem('user')).id
                     };
-                    debugger;
                     // Make a POST request to add the item
                     const response = await fetch('items/AddExpense', {
                         method: 'POST',
@@ -136,7 +139,7 @@ export function Expenses() {
                     // Check if the response is ok
                     if (response.ok) {
                         // Push the new item to the expense list
-                        expensesArray.push({
+                        expensesArray.items.push({
                             itemName: item.name,
                             itemPrice: item.price,
                             roomId: roomId,
@@ -164,13 +167,13 @@ export function Expenses() {
 
     const countSumOfItems = (roomId, expenseId) => (e) => {
         let sum = 0;
-        userRooms[roomId][expenseId].items.forEach((item) => {
+        userRooms[roomId].expenses[expenseId].items.forEach((item) => {
             sum += item.itemPrice;
         });
         sum = sum.toFixed(2);
         return sum;
     };
-
+    
     const removeItem = async (expenseId, item) => {
         try {
             const itemToRemove = {
@@ -201,7 +204,6 @@ export function Expenses() {
 
     const removeExpense = async (expenseId) => {
         try {
-            debugger;
             // Make a POST request to add the item
             const response = await fetch(`items/RemoveExpense?expenseId=${expenseId}`, {
                 method: 'POST'
@@ -233,24 +235,23 @@ export function Expenses() {
                 </thead>
                 <tbody>
                     {Object.keys(userRooms).map(roomId => (
-                        <div class="h-100 p-5 bg-body-tertiary border rounded-3" key={roomId}>
-                            {userRooms[roomId] && Object.keys(userRooms[roomId]).length > 0 && (
-                                <h2>{userRooms[roomId][Object.keys(userRooms[roomId])[0]].items[0].roomName}</h2>
-                            )}
-                            {Object.keys(userRooms[roomId]).map(expenseId => (
-                                <div class="h-100 p-5 bg-body-tertiary border rounded-3" key={expenseId}>
+                        <div className="h-100 p-5 bg-body-tertiary border rounded-3" key={roomId}>
+                            <h2>{userRooms[roomId].roomName}</h2>
+                            
+                            {Object.keys(userRooms[roomId].expenses).map(expenseId => (
+                                <div className="h-100 p-5 bg-body-tertiary border rounded-3" key={expenseId}>
                                     <div className="one-row">
-                                        <h3>{userRooms[roomId][expenseId].expenseName}</h3>
+                                        <h3>{userRooms[roomId].expenses[expenseId].expenseName}</h3>
                                         <button className="btn btn-outline-secondary" type="button" onClick={() => removeExpense(expenseId)}>X</button>
                                     </div>
                                     <div>
-                                        {userRooms[roomId][expenseId].items.length > 0 ? (
-                                            userRooms[roomId][expenseId].items.map((item, itemIndex) => (
+                                        {userRooms[roomId].expenses[expenseId].items.length > 0 ? (
+                                            userRooms[roomId].expenses[expenseId].items.map((item, itemIndex) => (
                                                 <div className="one-row" key={itemIndex}>
                                                     {item.itemName !== null ? (
                                                         <>
                                                             <p>{item.itemName}: {item.itemPrice}</p>
-                                                            <button className="btn btn-outline-secondary" type="button" onClick={()=>removeItem(expenseId, item)}>X</button>
+                                                            <button className="btn btn-outline-secondary" type="button" onClick={() => removeItem(expenseId, item)}>X</button>
                                                         </>
                                                     ) : (
                                                         <p>No items</p>
@@ -274,17 +275,18 @@ export function Expenses() {
                                         </form>
                                     </div>
                                 </div>
-                            ))}
-                            <h3>Add new expense</h3>
-                            <div className="new-expenses">
-                                <form className="expense-form" onSubmit={handleFormExpenseSubmit(roomId)}>
-                                    <p>Name</p>
-                                    <input type="search" onChange={(e) => setExpenseName(e.target.value)} />
-                                    <p>Purchase Date</p>
-                                    <input type="search" onChange={(e) => setPurchaseDate(e.target.value)} />
-                                    <button className="btn btn-outline-secondary" type="submit">Add</button>
-                                </form>
-                            </div>
+                            ))};
+                            
+                                <div className="new-expenses">
+                                    <h3>Add new expense</h3>
+                                    <form className="expense-form" onSubmit={handleFormExpenseSubmit(roomId)}>
+                                        <p>Name</p>
+                                        <input type="search" onChange={(e) => setExpenseName(e.target.value)} />
+                                        <p>Purchase Date</p>
+                                        <input type="search" onChange={(e) => setPurchaseDate(e.target.value)} />
+                                        <button className="btn btn-outline-secondary" type="submit">Add</button>
+                                    </form>
+                                </div>
                         </div>
                     ))}
                 </tbody>

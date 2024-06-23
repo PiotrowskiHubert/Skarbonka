@@ -5,6 +5,8 @@ export function Rooms() {
     const [modalRoom, setModalRoom] = useState('');
     const [rooms, setRooms] = useState([]); // Initialize with an empty array
     const [userRooms, setUserRooms] = useState([]);
+    const [roomName, setRoomName] = useState('');
+    const [password, setPassword] = useState('');
 
     useEffect(() => {
         populateRoomsData();
@@ -113,6 +115,33 @@ export function Rooms() {
         }
     }
 
+    async function handleCreateRoom() {
+        debugger;
+        const room = {
+            name: roomName,
+            password: password
+        };
+
+        try {
+            const response = await fetch('rooms/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(room),
+            });
+
+            if (response.ok) {
+                console.log("Room created");
+            } else {
+                console.error('Failed to join room');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+
+    }
+
     return (
         <div>
             <h1 id="tableLabel">Available Rooms</h1>
@@ -135,6 +164,16 @@ export function Rooms() {
                     )}
                 </tbody>
             </table>
+            <div className="new-expenses">
+                <h3>Create new room</h3>
+                <form className="expense-form" onSubmit={handleCreateRoom}>
+                    <p>Name</p>
+                    <input type="search" onChange={(e) => setRoomName(e.target.value)} />
+                    <p>Password (leave empty if none)</p>
+                    <input type="search" onChange={(e) => setPassword(e.target.value)} />
+                    <button className="btn btn-outline-secondary" type="submit">Add</button>
+                </form>
+            </div>
             <div id="middle">
                 <dialog id="modal">
                     <div class="close-modal">
