@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import './Expenses.css';
 import { React, Fragment } from 'react';
 
@@ -10,6 +10,9 @@ export function Expenses() {
     const [itemPrice, setItemPrice] = useState('');
     const [expenseName, setExpenseName] = useState('');
     const [purchaseDate, setPurchaseDate] = useState('');
+
+    const userRoomsRef = useRef();
+    userRoomsRef.current = userRooms;
 
     useEffect(() => {
         populateItemsData();
@@ -58,7 +61,6 @@ export function Expenses() {
     }
 
     const handleSubmitItem = async (roomId, expenseId, item) => {
-        debugger;
         // Check if the provided roomName matches the available room
         if (userRooms.hasOwnProperty(roomId)) {
             // Access the expenses array for the given room
@@ -86,12 +88,13 @@ export function Expenses() {
                         // Check if the response is ok
                         if (response.ok) {
                             // Push the new item to the expense list
-                            itemsArray.push({
+                            itemsArray.items.push({
                                 itemName: item.name,
-                                itemPrice: item.price,
+                                itemPrice: parseFloat(item.price),
                                 roomId: roomId,
                                 expenseId: expenseId
                             });
+                            setUserRooms({ ...userRoomsRef.current });
                         } else {
                             console.error('Failed to add item');
                         }
@@ -139,12 +142,11 @@ export function Expenses() {
                     // Check if the response is ok
                     if (response.ok) {
                         // Push the new item to the expense list
-                        expensesArray.items.push({
-                            itemName: item.name,
-                            itemPrice: item.price,
-                            roomId: roomId,
-                            expenseId: expense.id
-                        });
+                        expensesArray[newExpenseId] = {
+                            expenseName: expense.name,
+                            items: []
+                        };
+                        setUserRooms({ ...userRoomsRef.current });
                     } else {
                         console.error('Failed to add expense');
                     }
@@ -193,7 +195,13 @@ export function Expenses() {
 
             // Check if the response is ok
             if (response.ok) {
-                // Remove item from array IMPLEMENT IT!
+                const updatedUserRooms = { ...userRoomsRef.current };
+                const itemsArray = updatedUserRooms[item.roomId].expenses[expenseId].items;
+                const itemIndex = itemsArray.findIndex(i => i.itemId === item.itemId);
+                if (itemIndex > -1) {
+                    itemsArray.splice(itemIndex, 1);
+                    setUserRooms(updatedUserRooms);
+                }
             } else {
                 console.error('Failed to add item');
             }
@@ -211,7 +219,9 @@ export function Expenses() {
 
             // Check if the response is ok
             if (response.ok) {
-                // Remove item from array IMPLEMENT IT!
+                const updatedUserRooms = { ...userRoomsRef.current };
+                delete updatedUserRooms[roomId].expenses[expenseId];
+                setUserRooms(updatedUserRooms);
             } else {
                 console.error('Failed to remove item');
             }
@@ -275,7 +285,7 @@ export function Expenses() {
                                         </form>
                                     </div>
                                 </div>
-                            ))};
+                            ))}
                             
                                 <div className="new-expenses">
                                     <h3>Add new expense</h3>
