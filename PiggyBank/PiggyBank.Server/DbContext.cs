@@ -10,7 +10,7 @@ namespace PiggyBank
         public DbSet<Item> Item { get; set; }
         public DbSet<Room> Room { get; set; }
         public DbSet<Room_RoomUser> Room_RoomUser { get; set; }
-        public DbSet<Users> Users { get; set; }
+        public DbSet<UsersDto> Users { get; set; }
         public DbSet<Expense> Expense { get; set; }
         public DbSet<RoomUser> RoomUser {  get; set; }
 
