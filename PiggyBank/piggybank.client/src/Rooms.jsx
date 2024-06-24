@@ -3,7 +3,7 @@ import './Rooms.css';
 
 export function Rooms() {
     const [modalRoom, setModalRoom] = useState('');
-    const [rooms, setRooms] = useState([]); // Initialize with an empty array
+    const [rooms, setRooms] = useState([]);
     const [userRooms, setUserRooms] = useState([]);
     const [roomName, setRoomName] = useState('');
     const [password, setPassword] = useState('');
@@ -47,7 +47,6 @@ export function Rooms() {
     async function populateRoomsData() {
         const response = await fetch('rooms');
         const data = await response.json();
-        console.log(data); // Log the response
         setRooms(data);
     }
 
@@ -55,7 +54,6 @@ export function Rooms() {
         const userId = JSON.parse(localStorage.getItem('user')).id;
         const response = await fetch(`rooms/GetUserRooms?userId=${userId}`);
         const data = await response.json();
-        console.log(data); // Log the response
         setUserRooms(data);
     }
 

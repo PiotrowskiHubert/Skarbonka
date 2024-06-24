@@ -16,7 +16,6 @@ namespace PiggyBank
 
         public void AddRoomUserToRoom(int roomId, int roomUserId)
         {
-            // Create and add the new Room_RoomUser record
             var roomRoomUser = new Room_RoomUser
             {
                 RoomId = roomId,
@@ -49,10 +48,10 @@ namespace PiggyBank
                          where roomUser.Id == userId
                          from expense in Expense
                              .Where(e => e.RoomId == room.Id)
-                             .DefaultIfEmpty() // This performs the left join
+                             .DefaultIfEmpty()
                          from item in Item
                              .Where(i => i.ExpenseId == expense.Id)
-                             .DefaultIfEmpty() // This performs the left join
+                             .DefaultIfEmpty()
                          select new RoomExpenseDto
                          {
                              RoomId = room.Id,
