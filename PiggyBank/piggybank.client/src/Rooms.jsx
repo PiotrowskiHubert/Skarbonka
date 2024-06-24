@@ -5,24 +5,32 @@ export function Rooms() {
     const [modalRoom, setModalRoom] = useState('');
     const [rooms, setRooms] = useState([]); // Initialize with an empty array
     const [userRooms, setUserRooms] = useState([]);
+    const [roomName, setRoomName] = useState('');
+    const [password, setPassword] = useState('');
 
     useEffect(() => {
         populateRoomsData();
         populateUserRoomsData();
     }, []);
 
-    function showModal(room, status) {
-        if (room.password !== null && status === "joined") {
-            const modal = document.getElementById("modal-password");
-            modal.showModal();
-        }
-        else {
-            const modal = document.getElementById("modal");
-            modal.querySelector("#info").innerText = "Successfully " + status + " room: " + room.name;
-            modal.showModal();
-            setUserRooms(prevUserRooms => [...prevUserRooms, { roomId: room.id }]);
-        }
+    function showModalJoinNoPassword(room) {
+        const modal = document.getElementById("modal");
+        modal.querySelector("#info").innerText = "Successfully joined room: " + room.name;
+        modal.showModal();
+        setUserRooms(prevUserRooms => [...prevUserRooms, { roomId: room.id }]);
         setModalRoom(room);
+    }
+
+    function showModalJoinPassword(room) {
+        const modal = document.getElementById("modal-password");
+        modal.showModal();
+        setModalRoom(room);
+    }
+
+    function showModalLeft(room) {
+        const modal = document.getElementById("modal");
+        modal.querySelector("#info").innerText = "Successfully left room: " + room.name;
+        modal.showModal();
     }
 
     function closeModal() {
@@ -51,37 +59,41 @@ export function Rooms() {
         setUserRooms(data);
     }
 
-    async function joinRoom(room) {
-        const roomUserId = JSON.parse(localStorage.getItem('user')).id;
+    async function leaveRoom(room) {
+        const roomUserId = JSON.parse(localStorage.getItem("user")).id
         const roomUser = {
             Id: roomUserId,
             FirstName: "Marek",
             Surname: "Lesny"
         };
+        try {
+            const response = await fetch('rooms/leave', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ RoomId: room.id, Room: room, RoomUserId: roomUserId, RoomUser: roomUser }),
+            });
 
-        const matchedRoom = userRooms.find(userRoom => userRoom.roomId === room.id);
-
-        if (matchedRoom) {
-            try {
-                const response = await fetch('rooms/leave', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ RoomId: room.id, Room: room, RoomUserId: roomUserId, RoomUser: roomUser }),
-                });
-
-                if (response.ok) {
-                    showModal(room, "left");
-                    setUserRooms(prevUserRooms => prevUserRooms.filter(userRoom => userRoom.roomId !== room.id));
-                } else {
-                    console.error('Failed to leave room');
-                }
-            } catch (error) {
-                console.error('Error:', error);
+            if (response.ok) {
+                showModalLeft(room);
+                setUserRooms(prevUserRooms => prevUserRooms.filter(userRoom => userRoom.roomId !== room.id));
+            } else {
+                console.error('Failed to leave room');
             }
+        } catch (error) {
+            console.error('Error:', error);
         }
-        else {
+    }
+
+    async function joinRoom(room) {
+        const roomUserId = JSON.parse(localStorage.getItem("user")).id
+        const roomUser = {
+            Id: roomUserId,
+            FirstName: "Marek",
+            Surname: "Lesny"
+        };
+        if (room.password == null) {
             try {
                 const response = await fetch('rooms/join', {
                     method: 'POST',
@@ -92,7 +104,7 @@ export function Rooms() {
                 });
 
                 if (response.ok) {
-                    showModal(room, "joined");
+                    showModalJoinNoPassword(room);
                 } else {
                     console.error('Failed to join room');
                 }
@@ -100,17 +112,74 @@ export function Rooms() {
                 console.error('Error:', error);
             }
         }
+        else {
+            showModalJoinPassword(room);
+        }
+    }
+
+    async function joinRoomWithPassword(room) {
+        const roomUserId = JSON.parse(localStorage.getItem("user")).id
+        const roomUser = {
+            Id: roomUserId,
+            FirstName: "Marek",
+            Surname: "Lesny"
+        };
+        try {
+            const response = await fetch('rooms/join', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ RoomId: room.id, Room: room, RoomUserId: roomUserId, RoomUser: roomUser }),
+            });
+
+            if (response.ok) {
+                const modal = document.getElementById("modal");
+                modal.querySelector("#info").innerText = "Successfully joined room: " + room.name;
+            } else {
+                console.error('Failed to join room');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
     }
 
     async function checkPasswordToRoom() {
         const password = document.getElementById('room-password').value;
         if (modalRoom.password === password) {
+            joinRoomWithPassword(modalRoom);
             document.getElementById('info-password').innerText = "Successfully joined the room";
             setUserRooms(prevUserRooms => [...prevUserRooms, { roomId: modalRoom.id }]);
         }
         else {
             document.getElementById('info-password').innerText = "Wrong password!";
         }
+    }
+
+    async function handleCreateRoom() {
+        const room = {
+            name: roomName,
+            password: password
+        };
+
+        try {
+            const response = await fetch('rooms/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(room),
+            });
+
+            if (response.ok) {
+                console.log("Room created");
+            } else {
+                console.error('Failed to join room');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+
     }
 
     return (
@@ -128,13 +197,33 @@ export function Rooms() {
                         <tr key={room.id}>
                             <td>{room.id}</td>
                             <td>{room.name}</td>
-                            <button class="btn btn-outline-secondary" type="button" onClick={() => joinRoom(room)}>
+                            <button
+                                className="btn btn-outline-secondary"
+                                type="button"
+                                onClick={() => {
+                                    if (userRooms.some(userRoom => userRoom.roomId === room.id)) {
+                                        leaveRoom(room);
+                                    } else {
+                                        joinRoom(room);
+                                    }
+                                }}
+                            >
                                 {userRooms.some(userRoom => userRoom.roomId === room.id) ? 'Leave' : 'Join'}
                             </button>
                         </tr>
                     )}
                 </tbody>
             </table>
+            <div className="new-expenses">
+                <h3>Create new room</h3>
+                <form className="expense-form" onSubmit={handleCreateRoom}>
+                    <p>Name</p>
+                    <input type="search" onChange={(e) => setRoomName(e.target.value)} />
+                    <p>Password (leave empty if none)</p>
+                    <input type="password" onChange={(e) => setPassword(e.target.value)} />
+                    <button className="btn btn-outline-secondary" type="submit">Add</button>
+                </form>
+            </div>
             <div id="middle">
                 <dialog id="modal">
                     <div class="close-modal">

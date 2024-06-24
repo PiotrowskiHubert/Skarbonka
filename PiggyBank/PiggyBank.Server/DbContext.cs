@@ -16,6 +16,7 @@ namespace PiggyBank
 
         public void AddRoomUserToRoom(int roomId, int roomUserId)
         {
+            // Create and add the new Room_RoomUser record
             var roomRoomUser = new Room_RoomUser
             {
                 RoomId = roomId,
@@ -23,13 +24,6 @@ namespace PiggyBank
             };
 
             Room_RoomUser.Add(roomRoomUser);
-
-            var expensesToUpdate = Expense.Where(e => e.RoomId == roomId);
-
-            foreach (var expense in expensesToUpdate)
-            {
-                expense.RoomUserId = roomUserId;
-            }
 
             SaveChanges();
         }
@@ -44,37 +38,46 @@ namespace PiggyBank
 
             Room_RoomUser.Remove(roomRoomUser);
 
-            var expensesToUpdate = Expense.Where(e => e.RoomUserId == roomUserId);
-
-            foreach (var expense in expensesToUpdate)
-            {
-                expense.RoomUserId = null;
-            }
-
             SaveChanges();
         }
 
         public List<RoomExpenseDto> GetRoomUsers(int userId)
         {
             var result = from room in Room
-                         join expense in Expense on room.Id equals expense.RoomId
-                         join item in Item on expense.Id equals item.ExpenseId into Item
-                         from i in Item.DefaultIfEmpty()
-                         join roomUser in RoomUser on expense.RoomUserId equals roomUser.Id
+                         join room_roomuser in Room_RoomUser on room.Id equals room_roomuser.RoomId
+                         join roomUser in RoomUser on room_roomuser.RoomUserId equals roomUser.Id
                          where roomUser.Id == userId
-                         select new RoomExpenseDto
+                         join expense in Expense on room.Id equals expense.RoomId
+                         join item in Item on expense.Id equals item.ExpenseId into items
+                         from item in items.DefaultIfEmpty() // Left join with items
+                         select new
                          {
                              RoomId = room.Id,
                              RoomName = room.Name,
                              ExpenseId = expense.Id,
                              ExpenseName = expense.Name,
                              PurchaseDate = expense.PurchaseDate,
-                             ItemName = i.Name,
-                             ItemPrice = i.Price,
-                             ItemId = i.Id
+                             ItemName = item != null ? item.Name : null,
+                             ItemPrice = item != null ? item.Price : (double?)null,
+                             ItemId = item != null ? item.Id : (int?)null
                          };
 
-            return result.ToList();
+            var groupedResult = result
+                .GroupBy(r => new { r.ExpenseId, r.ItemId })
+                .Select(g => new RoomExpenseDto
+                {
+                    RoomId = g.First().RoomId,
+                    RoomName = g.First().RoomName,
+                    ExpenseId = g.First().ExpenseId,
+                    ExpenseName = g.First().ExpenseName,
+                    PurchaseDate = g.First().PurchaseDate,
+                    ItemName = g.First().ItemName,
+                    ItemPrice = g.First().ItemPrice,
+                    ItemId = g.First().ItemId
+                })
+                .ToList();
+
+            return groupedResult;
         }
 
         public void AddItem(Item item)
@@ -85,19 +88,8 @@ namespace PiggyBank
 
         public void AddExpense(Expense expense)
         {
+            Expense.Add(expense);
             SaveChanges();
-            var roomUsersInSameRoom = RoomUser
-                .Where(ru => Room_RoomUser.Any(rr => rr.RoomId ==
-                    Expense.Where(e => e.Id == expense.Id)
-                                    .Select(e => e.RoomId)
-                                    .FirstOrDefault()))
-                .ToList();
-
-            foreach(var roomUser in roomUsersInSameRoom)
-            {
-                expense.RoomUserId = roomUser.Id;
-                Expense.Add(expense);
-            }
         }
 
         public void RemoveItem(Item item)

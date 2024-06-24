@@ -28,6 +28,12 @@ namespace PiggyBank.Server.Controllers
             return items;
         }
 
+        [HttpPost("create", Name = "CreateRoom")]
+        public IActionResult CreateRoom([FromBody] Room room) {
+            _roomsService.CreateRoom(room);
+            return Ok(new { message = "Successfully created room" });
+        }
+
         [HttpPost("join", Name = "JoinRoom")]
         public IActionResult JoinRoom([FromBody] Room_RoomUser room_RoomUser)
         {

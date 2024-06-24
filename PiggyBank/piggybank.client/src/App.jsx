@@ -6,6 +6,7 @@ import { Expenses } from './Expenses';
 import { Login } from './Login';
 import { Register } from './Register';
 import { Rooms } from './Rooms';
+import { Profile } from './Profile'
 function App() {
     return (
         <>
@@ -17,6 +18,7 @@ function App() {
                         <Route path='login' element={<Login />}></Route>
                         <Route path='register' element={<Register />}></Route>
                         <Route path='available-rooms' element={<Rooms />}></Route>
+                        <Route path='profile' element={<Profile /> }></Route>
                     </Routes>
                 </Layout>
             </BrowserRouter>
