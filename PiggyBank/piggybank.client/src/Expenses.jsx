@@ -8,6 +8,7 @@ export function Expenses() {
     const [userRooms, setUserRooms] = useState([]);
     const [itemName, setItemName] = useState('');
     const [itemPrice, setItemPrice] = useState('');
+    const [itemId, setItemId] = useState('');
     const [expenseName, setExpenseName] = useState('');
     const [purchaseDate, setPurchaseDate] = useState('');
 
@@ -50,10 +51,6 @@ export function Expenses() {
                 itemName: item.itemName,
                 itemPrice: item.itemPrice,
                 itemId: item.itemId,
-                roomName: item.roomName,
-                expenseId: item.expenseId,
-                expenseName: item.expenseName,
-                roomId: item.roomId
             });
         });
         setUserRooms(sortedData);
@@ -86,11 +83,13 @@ export function Expenses() {
                         });
 
                         // Check if the response is ok
+                        //debugger;
                         if (response.ok) {
                             // Push the new item to the expense list
                             itemsArray.items.push({
                                 itemName: item.name,
                                 itemPrice: parseFloat(item.price),
+                                itemId: item.id,
                                 roomId: roomId,
                                 expenseId: expenseId
                             });
@@ -117,7 +116,6 @@ export function Expenses() {
     };
 
     const handleSubmitExpense = async (roomId, expense) => {
-        debugger;
         // Check if the provided roomName matches the available room
         if (userRooms.hasOwnProperty(roomId)) {
             // Access the expenses array for the given room
@@ -127,8 +125,7 @@ export function Expenses() {
                     const expenseToAdd = {
                         Name: expense.name,
                         PurchaseDate: expense.purchaseDate,
-                        RoomId: roomId,
-                        RoomUserId: JSON.parse(localStorage.getItem('user')).id
+                        RoomId: roomId
                     };
                     // Make a POST request to add the item
                     const response = await fetch('items/AddExpense', {

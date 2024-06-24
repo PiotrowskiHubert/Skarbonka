@@ -60,7 +60,6 @@ export function Rooms() {
     }
 
     async function leaveRoom(room) {
-        debugger;
         const roomUserId = JSON.parse(localStorage.getItem("user")).id
         const roomUser = {
             Id: roomUserId,
@@ -147,7 +146,6 @@ export function Rooms() {
 
     async function checkPasswordToRoom() {
         const password = document.getElementById('room-password').value;
-        debugger;
         if (modalRoom.password === password) {
             joinRoomWithPassword(modalRoom);
             document.getElementById('info-password').innerText = "Successfully joined the room";
@@ -159,7 +157,6 @@ export function Rooms() {
     }
 
     async function handleCreateRoom() {
-        debugger;
         const room = {
             name: roomName,
             password: password
@@ -223,7 +220,7 @@ export function Rooms() {
                     <p>Name</p>
                     <input type="search" onChange={(e) => setRoomName(e.target.value)} />
                     <p>Password (leave empty if none)</p>
-                    <input type="search" onChange={(e) => setPassword(e.target.value)} />
+                    <input type="password" onChange={(e) => setPassword(e.target.value)} />
                     <button className="btn btn-outline-secondary" type="submit">Add</button>
                 </form>
             </div>
