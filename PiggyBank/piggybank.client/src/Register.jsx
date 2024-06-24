@@ -1,5 +1,5 @@
 import logo from '/images/logo.png';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export function Register() {
@@ -7,7 +7,6 @@ export function Register() {
     const [password, setPassword] = useState('');
     const [firstName, setFirstName] = useState('');
     const [surname, setSurname] = useState('');
-    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();

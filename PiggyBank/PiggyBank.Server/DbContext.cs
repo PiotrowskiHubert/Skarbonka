@@ -47,37 +47,25 @@ namespace PiggyBank
                          join room_roomuser in Room_RoomUser on room.Id equals room_roomuser.RoomId
                          join roomUser in RoomUser on room_roomuser.RoomUserId equals roomUser.Id
                          where roomUser.Id == userId
-                         join expense in Expense on room.Id equals expense.RoomId
-                         join item in Item on expense.Id equals item.ExpenseId into items
-                         from item in items.DefaultIfEmpty() // Left join with items
-                         select new
+                         from expense in Expense
+                             .Where(e => e.RoomId == room.Id)
+                             .DefaultIfEmpty() // This performs the left join
+                         from item in Item
+                             .Where(i => i.ExpenseId == expense.Id)
+                             .DefaultIfEmpty() // This performs the left join
+                         select new RoomExpenseDto
                          {
                              RoomId = room.Id,
                              RoomName = room.Name,
                              ExpenseId = expense.Id,
                              ExpenseName = expense.Name,
                              PurchaseDate = expense.PurchaseDate,
-                             ItemName = item != null ? item.Name : null,
-                             ItemPrice = item != null ? item.Price : (double?)null,
-                             ItemId = item != null ? item.Id : (int?)null
+                             ItemName = item.Name,
+                             ItemPrice = item.Price,
+                             ItemId = item.Id
                          };
 
-            var groupedResult = result
-                .GroupBy(r => new { r.ExpenseId, r.ItemId })
-                .Select(g => new RoomExpenseDto
-                {
-                    RoomId = g.First().RoomId,
-                    RoomName = g.First().RoomName,
-                    ExpenseId = g.First().ExpenseId,
-                    ExpenseName = g.First().ExpenseName,
-                    PurchaseDate = g.First().PurchaseDate,
-                    ItemName = g.First().ItemName,
-                    ItemPrice = g.First().ItemPrice,
-                    ItemId = g.First().ItemId
-                })
-                .ToList();
-
-            return groupedResult;
+            return result.ToList();
         }
 
         public void AddItem(Item item)

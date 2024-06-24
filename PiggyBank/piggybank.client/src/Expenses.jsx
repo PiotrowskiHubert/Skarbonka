@@ -1,14 +1,12 @@
 import { useEffect, useState, useRef } from 'react';
 import './Expenses.css';
-import { React, Fragment } from 'react';
+import { React } from 'react';
 
 export function Expenses() {
     const [items, setItems] = useState([]); // Initialize with an empty array
-    const [rooms, setRooms] = useState([]); // Initialize with an empty array
     const [userRooms, setUserRooms] = useState([]);
     const [itemName, setItemName] = useState('');
     const [itemPrice, setItemPrice] = useState('');
-    const [itemId, setItemId] = useState('');
     const [expenseName, setExpenseName] = useState('');
     const [purchaseDate, setPurchaseDate] = useState('');
 
@@ -241,11 +239,12 @@ export function Expenses() {
                     </tr>
                 </thead>
                 <tbody>
-                    {Object.keys(userRooms).map(roomId => (
+                    {Object.keys(userRooms).length > 0 ? (
+                        Object.keys(userRooms).map(roomId => (
                         <div className="h-100 p-5 bg-body-tertiary border rounded-3" key={roomId}>
                             <h2>{userRooms[roomId].roomName}</h2>
-                            
-                            {Object.keys(userRooms[roomId].expenses).map(expenseId => (
+                            {Object.keys(userRooms[roomId].expenses).length > 0 ? (
+                                Object.keys(userRooms[roomId].expenses).map(expenseId => (
                                 <div className="h-100 p-5 bg-body-tertiary border rounded-3" key={expenseId}>
                                     <div className="one-row">
                                         <h3>{userRooms[roomId].expenses[expenseId].expenseName}</h3>
@@ -282,7 +281,10 @@ export function Expenses() {
                                         </form>
                                     </div>
                                 </div>
-                            ))}
+                                ))
+                                ) : (
+                                    <p>No expenses</p>
+                                )}
                             
                                 <div className="new-expenses">
                                     <h3>Add new expense</h3>
@@ -295,7 +297,10 @@ export function Expenses() {
                                     </form>
                                 </div>
                         </div>
-                    ))}
+                        ))
+                ) : (
+                    <p>No rooms</p>
+                )}
                 </tbody>
             </table>
         </div>
