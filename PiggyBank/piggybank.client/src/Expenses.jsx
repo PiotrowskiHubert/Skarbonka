@@ -1,14 +1,12 @@
 import { useEffect, useState, useRef } from 'react';
 import './Expenses.css';
-import { React, Fragment } from 'react';
+import { React } from 'react';
 
 export function Expenses() {
-    const [items, setItems] = useState([]); // Initialize with an empty array
-    const [rooms, setRooms] = useState([]); // Initialize with an empty array
+    const [items, setItems] = useState([]);
     const [userRooms, setUserRooms] = useState([]);
     const [itemName, setItemName] = useState('');
     const [itemPrice, setItemPrice] = useState('');
-    const [itemId, setItemId] = useState('');
     const [expenseName, setExpenseName] = useState('');
     const [purchaseDate, setPurchaseDate] = useState('');
 
@@ -30,7 +28,6 @@ export function Expenses() {
         const userId = JSON.parse(localStorage.getItem('user')).id;
         const response = await fetch(`items/GetRoomExpenses?userId=${userId}`);
         const data = await response.json();
-        console.log(data);
         const sortedData = {};
 
         data.forEach(item => {
@@ -54,18 +51,13 @@ export function Expenses() {
             });
         });
         setUserRooms(sortedData);
-        console.log(sortedData); // Log the sorted data
     }
 
     const handleSubmitItem = async (roomId, expenseId, item) => {
-        // Check if the provided roomName matches the available room
         if (userRooms.hasOwnProperty(roomId)) {
-            // Access the expenses array for the given room
             const expensesArray = userRooms[roomId].expenses;
-            // Iterate over each expense in the expenses array
             if (expensesArray.hasOwnProperty(expenseId)) {
                 const itemsArray = expensesArray[expenseId];
-                // Check if the current expense matches the provided expense
 
                     try {
                         const itemToAdd = {
@@ -73,7 +65,6 @@ export function Expenses() {
                             Price: item.price,
                             ExpenseId: expenseId
                         };
-                        // Make a POST request to add the item
                         const response = await fetch('items/AddItem', {
                             method: 'POST',
                             headers: {
@@ -81,8 +72,7 @@ export function Expenses() {
                             },
                             body: JSON.stringify(itemToAdd),
                         });
-
-                        // Check if the response is ok
+                        
                         //debugger;
                         if (response.ok) {
                             // Push the new item to the expense list
@@ -116,18 +106,15 @@ export function Expenses() {
     };
 
     const handleSubmitExpense = async (roomId, expense) => {
-        // Check if the provided roomName matches the available room
         if (userRooms.hasOwnProperty(roomId)) {
-            // Access the expenses array for the given room
             const expensesArray = userRooms[roomId].expenses;
-            // Iterate over each expense in the expenses array
                 try {
                     const expenseToAdd = {
                         Name: expense.name,
                         PurchaseDate: expense.purchaseDate,
                         RoomId: roomId
                     };
-                    // Make a POST request to add the item
+
                     const response = await fetch('items/AddExpense', {
                         method: 'POST',
                         headers: {
@@ -136,9 +123,7 @@ export function Expenses() {
                         body: JSON.stringify(expenseToAdd),
                     });
 
-                    // Check if the response is ok
                     if (response.ok) {
-                        // Push the new item to the expense list
                         expensesArray[newExpenseId] = {
                             expenseName: expense.name,
                             items: []
@@ -181,7 +166,7 @@ export function Expenses() {
                 Price: item.itemPrice,
                 ExpenseId: expenseId
             };
-            // Make a POST request to add the item
+
             const response = await fetch('items/RemoveItem', {
                 method: 'POST',
                 headers: {
@@ -190,7 +175,6 @@ export function Expenses() {
                 body: JSON.stringify(itemToRemove),
             });
 
-            // Check if the response is ok
             if (response.ok) {
                 const updatedUserRooms = { ...userRoomsRef.current };
                 const itemsArray = updatedUserRooms[item.roomId].expenses[expenseId].items;
@@ -209,12 +193,10 @@ export function Expenses() {
 
     const removeExpense = async (expenseId) => {
         try {
-            // Make a POST request to add the item
             const response = await fetch(`items/RemoveExpense?expenseId=${expenseId}`, {
                 method: 'POST'
             });
 
-            // Check if the response is ok
             if (response.ok) {
                 const updatedUserRooms = { ...userRoomsRef.current };
                 delete updatedUserRooms[roomId].expenses[expenseId];
@@ -227,10 +209,6 @@ export function Expenses() {
         }
     }
 
-    useEffect(() => {
-        console.log(userRooms);
-    }, [userRooms]);
-
     return (
         <div>
             <h1 id="tableLabel">Expenses</h1>
@@ -241,11 +219,12 @@ export function Expenses() {
                     </tr>
                 </thead>
                 <tbody>
-                    {Object.keys(userRooms).map(roomId => (
+                    {Object.keys(userRooms).length > 0 ? (
+                        Object.keys(userRooms).map(roomId => (
                         <div className="h-100 p-5 bg-body-tertiary border rounded-3" key={roomId}>
                             <h2>{userRooms[roomId].roomName}</h2>
-                            
-                            {Object.keys(userRooms[roomId].expenses).map(expenseId => (
+                            {Object.keys(userRooms[roomId].expenses).length > 0 ? (
+                                Object.keys(userRooms[roomId].expenses).map(expenseId => (
                                 <div className="h-100 p-5 bg-body-tertiary border rounded-3" key={expenseId}>
                                     <div className="one-row">
                                         <h3>{userRooms[roomId].expenses[expenseId].expenseName}</h3>
@@ -266,7 +245,7 @@ export function Expenses() {
                                                 </div>
                                             ))
                                         ) : (
-                                            <p>No items</p> // Render this if no items are present
+                                            <p>No items</p>
                                         )}
                                         <p>Summary price of items: {countSumOfItems(roomId, expenseId)()}</p>
                                     </div>
@@ -282,7 +261,10 @@ export function Expenses() {
                                         </form>
                                     </div>
                                 </div>
-                            ))}
+                                ))
+                                ) : (
+                                    <p>No expenses</p>
+                                )}
                             
                                 <div className="new-expenses">
                                     <h3>Add new expense</h3>
@@ -295,7 +277,10 @@ export function Expenses() {
                                     </form>
                                 </div>
                         </div>
-                    ))}
+                        ))
+                ) : (
+                    <p>No rooms</p>
+                )}
                 </tbody>
             </table>
         </div>

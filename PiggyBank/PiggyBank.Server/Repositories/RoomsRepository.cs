@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PiggyBank.Server.Dtos;
 using PiggyBank.Server.Models;
 
 namespace PiggyBank.Server.Repositories
