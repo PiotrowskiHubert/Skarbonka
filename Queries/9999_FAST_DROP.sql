@@ -1,3 +1,6 @@
+USE PiggyBank;
+GO
+
 DROP TABLE Room_RoomUser;
 DROP TABLE Item;
 DROP TABLE Expense;

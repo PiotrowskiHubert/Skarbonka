@@ -128,7 +128,6 @@ export function Expenses() {
 
                     const newExpenseId = await response.json();
 
-                    debugger;
                     if (response.ok) {
                         expensesArray[newExpenseId.id] = {
                             expenseName: expense.name,
@@ -163,6 +162,28 @@ export function Expenses() {
         sum = sum.toFixed(2);
         return sum;
     };
+
+    const countSumOfExpenses = (roomId) => (e) => {
+        let sum = 0;
+        const expensesSome = userRooms[roomId].expenses;
+        let iterated = false;
+        Object.keys(expensesSome).map((expenseId) => {
+            expensesSome[expenseId].items.forEach((item) => {
+                const price = parseFloat(item.itemPrice);
+                if (!isNaN(price)) {
+                    sum += price;
+                    iterated = true;
+                }
+            });
+        });
+        if (iterated) {
+            sum = sum.toFixed(2);
+        }
+        else {
+            sum = 0;
+        }
+        return sum;
+    }
     
     const removeItem = async (roomId, expenseId, item) => {
         try {
@@ -272,6 +293,7 @@ export function Expenses() {
                                 ) : (
                                     <p>No expenses</p>
                                 )}
+                                <p>Summary of room expenses: {countSumOfExpenses(roomId)()}</p>
                             
                                 <div className="new-expenses">
                                     <h3>Add new expense</h3>
