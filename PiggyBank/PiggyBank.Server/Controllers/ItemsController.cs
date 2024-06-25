@@ -35,8 +35,8 @@ namespace PiggyBank.Controllers
         {
             if (item != null)
             {
-                _itemsService.AddItem(item);
-                return Ok(new { message = "Successfully added new item" });
+                int id = _itemsService.AddItem(item);
+                return Ok(new { id = id });
             }
             else
             {
@@ -49,8 +49,8 @@ namespace PiggyBank.Controllers
         {
             if (expense != null)
             {
-                _itemsService.AddExpense(expense);
-                return Ok(new { message = "Successfully added new expense" });
+                int id = _itemsService.AddExpense(expense);
+                return Ok(new { id = id });
             }
             else
             {

@@ -9,8 +9,8 @@ namespace PiggyBank.Services
     {
         List<Item> GetItems();
         List<RoomExpenseDto> GetRoomExpenses(int userId);
-        void AddItem(Item item);
-        void AddExpense(Expense expense);
+        int AddItem(Item item);
+        int AddExpense(Expense expense);
         void RemoveItem(Item item);
         void RemoveExpense(int expenseId);
     }
@@ -35,14 +35,14 @@ namespace PiggyBank.Services
             }
         }
 
-        public void AddItem(Item item)
+        public int AddItem(Item item)
         {
-            _itemsRepository.AddItem(item);
+            return _itemsRepository.AddItem(item);
         }
 
-        public void AddExpense(Expense expense)
+        public int AddExpense(Expense expense)
         {
-            _itemsRepository.AddExpense(expense);
+            return _itemsRepository.AddExpense(expense);
         }
 
         public void RemoveItem(Item item)

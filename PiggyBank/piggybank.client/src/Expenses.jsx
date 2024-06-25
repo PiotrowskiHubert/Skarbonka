@@ -65,6 +65,7 @@ export function Expenses() {
                             Price: item.price,
                             ExpenseId: expenseId
                         };
+
                         const response = await fetch('items/AddItem', {
                             method: 'POST',
                             headers: {
@@ -72,6 +73,8 @@ export function Expenses() {
                             },
                             body: JSON.stringify(itemToAdd),
                         });
+
+                        const result = await response.json();
                         
                         //debugger;
                         if (response.ok) {
@@ -79,7 +82,7 @@ export function Expenses() {
                             itemsArray.items.push({
                                 itemName: item.name,
                                 itemPrice: parseFloat(item.price),
-                                itemId: item.id,
+                                itemId: result.id,
                                 roomId: roomId,
                                 expenseId: expenseId
                             });
@@ -123,8 +126,11 @@ export function Expenses() {
                         body: JSON.stringify(expenseToAdd),
                     });
 
+                    const newExpenseId = await response.json();
+
+                    debugger;
                     if (response.ok) {
-                        expensesArray[newExpenseId] = {
+                        expensesArray[newExpenseId.id] = {
                             expenseName: expense.name,
                             items: []
                         };
@@ -158,7 +164,7 @@ export function Expenses() {
         return sum;
     };
     
-    const removeItem = async (expenseId, item) => {
+    const removeItem = async (roomId, expenseId, item) => {
         try {
             const itemToRemove = {
                 Id: item.itemId,
@@ -177,7 +183,7 @@ export function Expenses() {
 
             if (response.ok) {
                 const updatedUserRooms = { ...userRoomsRef.current };
-                const itemsArray = updatedUserRooms[item.roomId].expenses[expenseId].items;
+                const itemsArray = updatedUserRooms[roomId].expenses[expenseId].items;
                 const itemIndex = itemsArray.findIndex(i => i.itemId === item.itemId);
                 if (itemIndex > -1) {
                     itemsArray.splice(itemIndex, 1);
@@ -191,7 +197,7 @@ export function Expenses() {
         }
     }
 
-    const removeExpense = async (expenseId) => {
+    const removeExpense = async (roomId, expenseId) => {
         try {
             const response = await fetch(`items/RemoveExpense?expenseId=${expenseId}`, {
                 method: 'POST'
@@ -199,7 +205,8 @@ export function Expenses() {
 
             if (response.ok) {
                 const updatedUserRooms = { ...userRoomsRef.current };
-                delete updatedUserRooms[roomId].expenses[expenseId];
+                const expensesObject = updatedUserRooms[roomId].expenses;
+                delete expensesObject[expenseId];
                 setUserRooms(updatedUserRooms);
             } else {
                 console.error('Failed to remove item');
@@ -228,7 +235,7 @@ export function Expenses() {
                                 <div className="h-100 p-5 bg-body-tertiary border rounded-3" key={expenseId}>
                                     <div className="one-row">
                                         <h3>{userRooms[roomId].expenses[expenseId].expenseName}</h3>
-                                        <button className="btn btn-outline-secondary" type="button" onClick={() => removeExpense(expenseId)}>X</button>
+                                        <button className="btn btn-outline-secondary" type="button" onClick={() => removeExpense(roomId, expenseId)}>X</button>
                                     </div>
                                     <div>
                                         {userRooms[roomId].expenses[expenseId].items.length > 0 ? (
@@ -237,7 +244,7 @@ export function Expenses() {
                                                     {item.itemName !== null ? (
                                                         <>
                                                             <p>{item.itemName}: {item.itemPrice}</p>
-                                                            <button className="btn btn-outline-secondary" type="button" onClick={() => removeItem(expenseId, item)}>X</button>
+                                                            <button className="btn btn-outline-secondary" type="button" onClick={() => removeItem(roomId, expenseId, item)}>X</button>
                                                         </>
                                                     ) : (
                                                         <p>No items</p>

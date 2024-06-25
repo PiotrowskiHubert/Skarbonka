@@ -67,16 +67,18 @@ namespace PiggyBank
             return result.ToList();
         }
 
-        public void AddItem(Item item)
+        public int AddItem(Item item)
         {
             Item.Add(item);
             SaveChanges();
+            return item.Id;
         }
 
-        public void AddExpense(Expense expense)
+        public int AddExpense(Expense expense)
         {
             Expense.Add(expense);
             SaveChanges();
+            return expense.Id;
         }
 
         public void RemoveItem(Item item)

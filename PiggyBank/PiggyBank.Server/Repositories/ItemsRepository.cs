@@ -8,8 +8,8 @@ namespace PiggyBank.Repositories
     {
         List<Item> GetItems();
         List<RoomExpenseDto> GetRoomExpenses(int userId);
-        void AddItem(Item item);
-        void AddExpense(Expense expense);
+        int AddItem(Item item);
+        int AddExpense(Expense expense);
         void RemoveItem(Item item);
         void RemoveExpense(int expenseId);
     }
@@ -32,20 +32,24 @@ namespace PiggyBank.Repositories
             }
         }
 
-        public void AddItem(Item item)
+        public int AddItem(Item item)
         {
+            int id;
             using (var dbContext = new DbContext())
             {
-                dbContext.AddItem(item);
+                id = dbContext.AddItem(item);
             }
+            return id;
         }
 
-        public void AddExpense(Expense expense)
+        public int AddExpense(Expense expense)
         {
+            int id;
             using (var dbContext = new DbContext())
             {
-                dbContext.AddExpense(expense);
+                id = dbContext.AddExpense(expense);
             }
+            return id;
         }
 
         public void RemoveItem(Item item)
